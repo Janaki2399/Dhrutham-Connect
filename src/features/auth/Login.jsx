@@ -1,36 +1,48 @@
-import { unwrapResult } from "@reduxjs/toolkit";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { userLogin } from "./authSlice";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
+import { userLogin } from "./authSlice";
+
 export const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const loginStatus = useSelector((state) => state.auth.loginStatus);
+  const token = useSelector((state) => state.auth.token);
+  // const loggedInUserStatus = useSelector(
+  //   (state) => state.user.loggedInUserDataStatus
+  // );
+  const dispatch = useDispatch();
+
   const navigate = useNavigate();
 
-  const dispatch = useDispatch();
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  const status = useSelector((state) => state.auth.loginStatus);
-  const token = useSelector((state) => state.auth.token);
-
   useEffect(() => {
-    if (status === "succeeded") {
-      // dispatch(fetchLoggedInUserDetails(token));
+    if (loginStatus === "succeeded") {
       navigate("/feed");
+      localStorage?.setItem("login", JSON.stringify({ token }));
     }
-  }, [status]);
-  //   const [addResultStatus,setAddResultStatus]=useState("idle");
+  }, [loginStatus]);
+
+  // useEffect(() => {
+  //   if (loggedInUserStatus === "succeeded") {
+  //     navigate("/feed");
+  //   }
+  // }, [loggedInUserStatus]);
+
   const onlogin = () => {
-    // setAddResultStatus("pending");
-    if (status === "idle") {
+    if (loginStatus === "idle" || loginStatus === "failed") {
       dispatch(userLogin({ email, password }));
     }
   };
+
+  const onEmailChanged = (e) => setEmail(e.target.value);
+  const onPasswordChanged = (e) => setPassword(e.target.value);
 
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        //   login(email, password, state);
         onlogin();
       }}
       className="center-align-ver-hor border-all gray-border padding-all"
@@ -38,27 +50,33 @@ export const Login = () => {
     >
       <div className="font-size-3 margin-bottom text-center">Login</div>
       <div class="flex-column">
-        <label class="font-size-6 font-bold-1">Email</label>
+        <label htmlFor="email" className="font-size-6 font-bold-1">
+          Email
+        </label>
         <input
           type="email"
-          class="text-input "
-          onChange={(e) => {
-            setEmail(e.target.value);
-          }}
+          className="text-input "
+          value={email}
+          autoFocus={true}
+          onChange={onEmailChanged}
         />
       </div>
       <div class="flex-column">
-        <label class="font-size-6 font-bold-1">Password</label>
+        <label htmlFor="password" className="font-size-6 font-bold-1">
+          Password
+        </label>
         <input
           type="password"
-          class="text-input"
-          onChange={(e) => {
-            setPassword(e.target.value);
-          }}
+          className="text-input"
+          value={password}
+          onChange={onPasswordChanged}
         />
       </div>
       <div>
-        <button className="btn btn-primary-contained full-width font-size-5">
+        <button
+          type="submit"
+          className="btn btn-primary-contained full-width font-size-5"
+        >
           LOGIN
         </button>
       </div>
@@ -71,6 +89,8 @@ export const Login = () => {
           Sign up
         </span>
       </div>
+
+      {loginStatus === "failed" && <div>Login failed</div>}
     </form>
   );
 };
