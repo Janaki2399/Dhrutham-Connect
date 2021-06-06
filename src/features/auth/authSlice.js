@@ -23,24 +23,24 @@ export const userSignUp = createAsyncThunk("/signUp", async (signUpDetails) => {
   );
   return response.data;
 });
-export const fetchCurrentUserData = createAsyncThunk(
-  "/currentUser",
-  async (token) => {
-    const response = await axios.get(
-      `https://dhrutham-connect-backend.janaki23.repl.co/users`,
-      {
-        headers: {
-          authorization: token,
-        },
-      }
-    );
-    return response.data;
-  }
-);
+// export const fetchCurrentUserData = createAsyncThunk(
+//   "/currentUser",
+//   async (token) => {
+//     const response = await axios.get(
+//       `https://dhrutham-connect-backend.janaki23.repl.co/users`,
+//       {
+//         headers: {
+//           authorization: token,
+//         },
+//       }
+//     );
+//     return response.data;
+//   }
+// );
 
 const initialState = {
   token: savedToken,
-  currentUser: {},
+  // currentUser: {},
   loginStatus: "idle",
   signUpStatus: "idle",
   currentUserDataStatus: "idle",
@@ -56,7 +56,10 @@ export const authSlice = createSlice({
       state.token = null;
       state.loginStatus = "idle";
       state.signUpStatus = "idle";
-      state.currentUser = {};
+      // state.currentUser = {};
+    },
+    userFollowed: (state, action) => {
+      state.currentUser.following.push(action.payload);
     },
   },
   extraReducers: {
@@ -65,7 +68,6 @@ export const authSlice = createSlice({
     },
     [userLogin.fulfilled]: (state, action) => {
       state.token = action.payload.token;
-      state.currentUser = action.payload.userDetails;
       state.loginStatus = "succeeded";
     },
     [userLogin.rejected]: (state, action) => {
@@ -77,25 +79,24 @@ export const authSlice = createSlice({
     },
     [userSignUp.fulfilled]: (state, action) => {
       state.token = action.payload.token;
-      state.currentUser = action.payload.userDetails;
       state.signUpStatus = "succeeded";
     },
     [userSignUp.rejected]: (state, action) => {
       state.signUpStatus = "failed";
       state.error = action.error.message;
     },
-    [fetchCurrentUserData.pending]: (state, action) => {
-      state.currentUserDataStatus = "idle";
-    },
-    [fetchCurrentUserData.fulfilled]: (state, action) => {
-      state.currentUser = action.payload.user;
-      state.currentUserDataStatus = "succeeded";
-    },
-    [fetchCurrentUserData.rejected]: (state, action) => {
-      state.currentUserDataStatus = "failed";
-      state.error = action.error.message;
-    },
+    // [fetchCurrentUserData.pending]: (state, action) => {
+    //   state.currentUserDataStatus = "idle";
+    // },
+    // [fetchCurrentUserData.fulfilled]: (state, action) => {
+    //   state.currentUser = action.payload.user;
+    //   state.currentUserDataStatus = "succeeded";
+    // },
+    // [fetchCurrentUserData.rejected]: (state, action) => {
+    //   state.currentUserDataStatus = "failed";
+    //   state.error = action.error.message;
+    // },
   },
 });
-export const { logoutButtonClicked } = authSlice.actions;
+export const { logoutButtonClicked, userFollowed } = authSlice.actions;
 export default authSlice.reducer;

@@ -18,9 +18,10 @@ export const SignUp = () => {
   const signUpStatus = useSelector((state) => state.auth.signUpStatus);
   useEffect(() => {
     if (signUpStatus === "succeeded") {
+      localStorage?.setItem("login", JSON.stringify({ token }));
       navigate("/feed");
     }
-  }, [signUpStatus]);
+  }, [signUpStatus, navigate, token]);
 
   // useEffect(() => {
   //   if (loggedInUserStatus === "succeeded") {
@@ -30,9 +31,7 @@ export const SignUp = () => {
 
   const signUp = async () => {
     if (signUpStatus === "idle" || signUpStatus === "failed") {
-      dispatch(
-        userSignUp({ email, firstName, lastName, userName, email, password })
-      );
+      dispatch(userSignUp({ email, firstName, lastName, userName, password }));
     }
   };
 

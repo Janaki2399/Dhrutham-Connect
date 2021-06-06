@@ -3,10 +3,11 @@ export const FollowingList = () => {
   const followingList = useSelector(
     (state) => state.user.userProfile.following
   );
+  console.log({ followingList });
   return (
-    <div>
+    <div className="margin-top">
       {followingList.map((item) => {
-        return <div>{item.name}</div>;
+        return <div>{item.userName}</div>;
       })}
     </div>
   );

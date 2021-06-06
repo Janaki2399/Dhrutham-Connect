@@ -9,15 +9,40 @@ export const fetchUserProfile = createAsyncThunk(
     return response.data.userDetails;
   }
 );
+export const fetchCurrentUserData = createAsyncThunk(
+  "/currentUser",
+  async (token) => {
+    const response = await axios.get(
+      `https://dhrutham-connect-backend.janaki23.repl.co/users`,
+      {
+        headers: {
+          authorization: token,
+        },
+      }
+    );
+    return response.data;
+  }
+);
 export const userSlice = createSlice({
   name: "user",
   initialState: {
+    currentUser: {},
     userProfile: {},
     userList: {},
     userProfileStatus: "idle",
+    currentUserStatus: "idle",
     error: null,
   },
-  reducers: {},
+  reducers: {
+    userFollowed: (state, action) => {
+      state.currentUser.following.push(action.payload.profileUserId);
+      state.userProfile.followers.push(action.payload.currentUserId);
+    },
+    userUnFollowed: (state, action) => {
+      state.currentUser.following.pull(action.payload.profileUserId);
+      state.userProfile.followers.pull(action.payload.currentUserId);
+    },
+  },
   extraReducers: {
     // [fetchLoggedInUserData.pending]: (state, action) => {
     //   state.loggedInUserDataStatus = "idle";
@@ -30,6 +55,17 @@ export const userSlice = createSlice({
     //   state.loggedInUserDataStatus = "failed";
     //   state.error = action.error.message;
     // },
+    [fetchCurrentUserData.pending]: (state, action) => {
+      state.currentUserDataStatus = "idle";
+    },
+    [fetchCurrentUserData.fulfilled]: (state, action) => {
+      state.currentUser = action.payload.user;
+      state.currentUserDataStatus = "succeeded";
+    },
+    [fetchCurrentUserData.rejected]: (state, action) => {
+      state.currentUserDataStatus = "failed";
+      state.error = action.error.message;
+    },
     [fetchUserProfile.pending]: (state, action) => {
       state.userProfileStatus = "idle";
     },
@@ -49,5 +85,5 @@ export const userSlice = createSlice({
     // },
   },
 });
-
+export const { userFollowed, userUnFollowed } = userSlice.actions;
 export default userSlice.reducer;

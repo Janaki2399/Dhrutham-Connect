@@ -2,21 +2,65 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfile } from "./userSlice";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { FollowersList } from "./FollowersList";
-import { FollowingList } from "./FollowingList";
+import axios from "axios";
+import { userFollowed, userUnFollowed } from "../users/userSlice";
 
 export const UserProfile = () => {
   const status = useSelector((state) => state.user.userProfileStatus);
   const profile = useSelector((state) => state.user.userProfile);
-  const currentUser = useSelector((state) => state.auth.currentUser);
+  const currentUser = useSelector((state) => state.user.currentUser);
+  const token = useSelector((state) => state.auth.token);
   const { userName } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   useEffect(() => {
     dispatch(fetchUserProfile(userName));
   }, [dispatch, userName]);
+  console.log(profile);
+  const isUserInFollowingList = () => {
+    return currentUser.following?.includes(profile._id);
+  };
+  const followUser = async (profileUserId) => {
+    try {
+      const { status } = await axios.post(
+        "https://dhrutham-connect-backend.janaki23.repl.co/users/follow",
+        {
+          _id: profileUserId,
+        },
+        {
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      if (status === 200) {
+        dispatch(
+          userFollowed({ currentUserId: currentUser._id, profileUserId })
+        );
+      }
+    } catch (error) {}
+  };
 
-  const isUserFollowed = () => {};
+  const unFollowUser = async (profileUserId) => {
+    try {
+      const { status } = await axios.post(
+        "https://dhrutham-connect-backend.janaki23.repl.co/users/unfollow",
+        {
+          _id: profileUserId,
+        },
+        {
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      if (status === 200) {
+        dispatch(
+          userUnFollowed({ currentUserId: currentUser._id, profileUserId })
+        );
+      }
+    } catch (error) {}
+  };
 
   return (
     <div>
@@ -27,12 +71,29 @@ export const UserProfile = () => {
           <div className="margin-top">
             {profile.firstName} {profile.lastName}
           </div>
-          {currentUser.userName !== userName && <button>Follow</button>}
+          {currentUser.userName !== userName &&
+            (isUserInFollowingList() ? (
+              <button
+                onClick={() => {
+                  unFollowUser(profile._id);
+                }}
+              >
+                Following
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  followUser(profile._id);
+                }}
+              >
+                Follow
+              </button>
+            ))}
           <div>{profile.userName}</div>
-          <div onClick={() => navigate(`/${profile.userName}/followers`)}>
+          <div onClick={() => navigate(`/users/${profile.userName}/followers`)}>
             Followers : {profile.followers?.length}
           </div>
-          <div onClick={() => navigate(`/${profile.userName}/following`)}>
+          <div onClick={() => navigate(`/users/${profile.userName}/following`)}>
             Following : {profile.following?.length}
           </div>
         </div>

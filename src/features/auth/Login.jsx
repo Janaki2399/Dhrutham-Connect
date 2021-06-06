@@ -19,10 +19,10 @@ export const Login = () => {
 
   useEffect(() => {
     if (loginStatus === "succeeded") {
-      navigate("/feed");
       localStorage?.setItem("login", JSON.stringify({ token }));
+      navigate("/feed");
     }
-  }, [loginStatus]);
+  }, [loginStatus, token, navigate]);
 
   // useEffect(() => {
   //   if (loggedInUserStatus === "succeeded") {

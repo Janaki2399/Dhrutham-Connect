@@ -4,16 +4,16 @@ import { Link, useNavigate } from "react-router-dom";
 import { logoutButtonClicked } from "../features/auth/authSlice";
 export const Navbar = () => {
   const token = useSelector((state) => state.auth.token);
-  const loggedInUserData = useSelector((state) => state.auth.currentUser);
+  const loggedInUserData = useSelector((state) => state.user.currentUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  console.log(loggedInUserData);
+
   useEffect(() => {
     if (token === null) {
       localStorage?.removeItem("login");
       navigate("/login");
     }
-  }, [token]);
+  }, [token, navigate]);
   const logout = async () => {
     await dispatch(logoutButtonClicked());
   };
