@@ -28,9 +28,13 @@ export const userSlice = createSlice({
   initialState: {
     currentUser: {},
     userProfile: {},
+    followingList: {},
+    followersList: {},
     userList: {},
     userProfileStatus: "idle",
     currentUserStatus: "idle",
+    followersListStatus: "idle",
+    followingListStatus: "idle",
     error: null,
   },
   reducers: {
@@ -39,8 +43,23 @@ export const userSlice = createSlice({
       state.userProfile.followers.push(action.payload.currentUserId);
     },
     userUnFollowed: (state, action) => {
-      state.currentUser.following.pull(action.payload.profileUserId);
-      state.userProfile.followers.pull(action.payload.currentUserId);
+      // const profileUserIndex = findIndex(
+      //   action.payload.profileUserId,
+      //   state.current.following
+      // );
+      const profileUserIndex = state.currentUser.following.indexOf(
+        action.payload.profileUserId
+      );
+      const currentUserIndex = state.userProfile.followers.indexOf(
+        action.payload.currentUserId
+      );
+
+      // findIndex(
+      //   action.payload.profileUserId,
+      //   state.current.following
+      // );
+      state.currentUser.following.splice(profileUserIndex, 1);
+      state.userProfile.followers.splice(currentUserIndex, 1);
     },
   },
   extraReducers: {

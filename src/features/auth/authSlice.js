@@ -3,7 +3,7 @@ import {
   createAsyncThunk,
   createSlice,
 } from "@reduxjs/toolkit";
-import { isValidElement } from "react";
+
 import axios from "axios";
 const { token: savedToken } = JSON.parse(localStorage?.getItem("login")) || {
   token: null,
@@ -23,20 +23,6 @@ export const userSignUp = createAsyncThunk("/signUp", async (signUpDetails) => {
   );
   return response.data;
 });
-// export const fetchCurrentUserData = createAsyncThunk(
-//   "/currentUser",
-//   async (token) => {
-//     const response = await axios.get(
-//       `https://dhrutham-connect-backend.janaki23.repl.co/users`,
-//       {
-//         headers: {
-//           authorization: token,
-//         },
-//       }
-//     );
-//     return response.data;
-//   }
-// );
 
 const initialState = {
   token: savedToken,
@@ -52,11 +38,9 @@ export const authSlice = createSlice({
 
   reducers: {
     logoutButtonClicked: (state, action) => {
-      // state = initialState;
       state.token = null;
       state.loginStatus = "idle";
       state.signUpStatus = "idle";
-      // state.currentUser = {};
     },
     userFollowed: (state, action) => {
       state.currentUser.following.push(action.payload);
@@ -85,17 +69,6 @@ export const authSlice = createSlice({
       state.signUpStatus = "failed";
       state.error = action.error.message;
     },
-    // [fetchCurrentUserData.pending]: (state, action) => {
-    //   state.currentUserDataStatus = "idle";
-    // },
-    // [fetchCurrentUserData.fulfilled]: (state, action) => {
-    //   state.currentUser = action.payload.user;
-    //   state.currentUserDataStatus = "succeeded";
-    // },
-    // [fetchCurrentUserData.rejected]: (state, action) => {
-    //   state.currentUserDataStatus = "failed";
-    //   state.error = action.error.message;
-    // },
   },
 });
 export const { logoutButtonClicked, userFollowed } = authSlice.actions;

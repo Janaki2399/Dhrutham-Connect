@@ -12,9 +12,7 @@ export const SignUp = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
-  const loggedInUserStatus = useSelector(
-    (state) => state.user.loggedInUserDataStatus
-  );
+
   const signUpStatus = useSelector((state) => state.auth.signUpStatus);
   useEffect(() => {
     if (signUpStatus === "succeeded") {

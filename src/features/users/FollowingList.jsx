@@ -1,9 +1,23 @@
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
 export const FollowingList = () => {
-  const followingList = useSelector(
-    (state) => state.user.userProfile.following
-  );
-  console.log({ followingList });
+  const location = useLocation();
+  const [followingList, setFollowingList] = useState([]);
+
+  useEffect(() => {
+    (async function () {
+      try {
+        const { data, status } = axios.get("");
+        if (status === 200) {
+          setFollowingList(data.followingList);
+        }
+      } catch (error) {
+        alert(error);
+      }
+    })();
+  }, []);
+
   return (
     <div className="margin-top">
       {followingList.map((item) => {

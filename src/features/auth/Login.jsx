@@ -10,9 +10,7 @@ export const Login = () => {
 
   const loginStatus = useSelector((state) => state.auth.loginStatus);
   const token = useSelector((state) => state.auth.token);
-  // const loggedInUserStatus = useSelector(
-  //   (state) => state.user.loggedInUserDataStatus
-  // );
+
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
@@ -23,12 +21,6 @@ export const Login = () => {
       navigate("/feed");
     }
   }, [loginStatus, token, navigate]);
-
-  // useEffect(() => {
-  //   if (loggedInUserStatus === "succeeded") {
-  //     navigate("/feed");
-  //   }
-  // }, [loggedInUserStatus]);
 
   const onlogin = () => {
     if (loginStatus === "idle" || loginStatus === "failed") {

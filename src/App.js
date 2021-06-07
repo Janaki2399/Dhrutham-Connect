@@ -6,8 +6,8 @@ import { Login } from "./features/auth/Login";
 import { PostList } from "./features/posts/PostList";
 import { SignUp } from "./features/auth/SignUp";
 import { UserProfile } from "./features/users/UserProfile";
-import { FollowingList } from "./features/users/FollowingList";
-import { FollowersList } from "./features/users/FollowersList";
+// import { FollowingList } from "./features/users/FollowingList";
+import { FollowerFollowingList } from "./features/users/FollowerFollowingList";
 import { fetchCurrentUserData } from "./features/users/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -29,8 +29,14 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/feed" element={<PostList />} />
         <Route path="/users/:userName" element={<UserProfile />} />
-        <Route path="/users/:userName/following" element={<FollowingList />} />
-        <Route path="/users/:userName/followers" element={<FollowersList />} />
+        <Route
+          path="/users/:userName/following"
+          element={<FollowerFollowingList />}
+        />
+        <Route
+          path="/users/:userName/followers"
+          element={<FollowerFollowingList />}
+        />
       </Routes>
     </div>
   );

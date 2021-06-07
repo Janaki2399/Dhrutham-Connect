@@ -13,10 +13,11 @@ export const UserProfile = () => {
   const { userName } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   useEffect(() => {
     dispatch(fetchUserProfile(userName));
   }, [dispatch, userName]);
-  console.log(profile);
+
   const isUserInFollowingList = () => {
     return currentUser.following?.includes(profile._id);
   };
@@ -71,24 +72,17 @@ export const UserProfile = () => {
           <div className="margin-top">
             {profile.firstName} {profile.lastName}
           </div>
-          {currentUser.userName !== userName &&
-            (isUserInFollowingList() ? (
-              <button
-                onClick={() => {
-                  unFollowUser(profile._id);
-                }}
-              >
-                Following
-              </button>
-            ) : (
-              <button
-                onClick={() => {
-                  followUser(profile._id);
-                }}
-              >
-                Follow
-              </button>
-            ))}
+          {currentUser.userName !== userName && (
+            <button
+              onClick={() => {
+                isUserInFollowingList()
+                  ? unFollowUser(profile._id)
+                  : followUser(profile._id);
+              }}
+            >
+              {isUserInFollowingList() ? "Following" : "Follow"}
+            </button>
+          )}
           <div>{profile.userName}</div>
           <div onClick={() => navigate(`/users/${profile.userName}/followers`)}>
             Followers : {profile.followers?.length}
