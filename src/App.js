@@ -3,13 +3,15 @@ import "./App.css";
 import { Navbar } from "./app/Navbar";
 import { Routes, Route } from "react-router-dom";
 import { Login } from "./features/auth/Login";
-import { PostList } from "./features/posts/PostList";
+import { PostsList } from "./features/posts/PostsList";
+import { CreatePost } from "./features/posts/CreatePost";
 import { SignUp } from "./features/auth/SignUp";
 import { UserProfile } from "./features/users/UserProfile";
 // import { FollowingList } from "./features/users/FollowingList";
 import { FollowerFollowingList } from "./features/users/FollowerFollowingList";
 import { fetchCurrentUserData } from "./features/users/userSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { Feed } from "./features/posts/Feed";
 
 function App() {
   const status = useSelector((state) => state.user.currentUserDataStatus);
@@ -27,7 +29,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/feed" element={<PostList />} />
+        {/* <Route path="/feed" element={<PostsList />} /> */}
         <Route path="/users/:userName" element={<UserProfile />} />
         <Route
           path="/users/:userName/following"
@@ -37,6 +39,7 @@ function App() {
           path="/users/:userName/followers"
           element={<FollowerFollowingList />}
         />
+        <Route path="/feed" element={<Feed />} />
       </Routes>
     </div>
   );

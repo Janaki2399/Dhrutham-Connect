@@ -22,7 +22,7 @@ export const Navbar = () => {
     <div className="nav navbar-height">
       <Link
         className="font-size-3 anchor-link text-color-primary cursor-pointer "
-        to="/"
+        to="/feed"
       >
         Dhrutham Connect
       </Link>

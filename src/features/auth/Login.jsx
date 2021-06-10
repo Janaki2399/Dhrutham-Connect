@@ -9,6 +9,7 @@ export const Login = () => {
   const [password, setPassword] = useState("");
 
   const loginStatus = useSelector((state) => state.auth.loginStatus);
+  const error = useSelector((state) => state.auth.error);
   const token = useSelector((state) => state.auth.token);
 
   const dispatch = useDispatch();
@@ -82,7 +83,7 @@ export const Login = () => {
         </span>
       </div>
 
-      {loginStatus === "failed" && <div>Login failed</div>}
+      {loginStatus === "failed" && <div>{error.message}</div>}
     </form>
   );
 };

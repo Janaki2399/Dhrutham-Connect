@@ -56,7 +56,7 @@ export const authSlice = createSlice({
     },
     [userLogin.rejected]: (state, action) => {
       state.loginStatus = "failed";
-      state.error = action.error.message;
+      state.error = action.error;
     },
     [userSignUp.pending]: (state, action) => {
       state.signUpStatus = "idle";

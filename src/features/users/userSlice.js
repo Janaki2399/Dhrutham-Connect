@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 export const fetchUserProfile = createAsyncThunk(
-  "/userProfile",
+  "users/userProfile",
   async (userName) => {
     const response = await axios.get(
       `https://dhrutham-connect-backend.janaki23.repl.co/users/${userName}`
@@ -10,7 +10,7 @@ export const fetchUserProfile = createAsyncThunk(
   }
 );
 export const fetchCurrentUserData = createAsyncThunk(
-  "/currentUser",
+  "users/currentUser",
   async (token) => {
     const response = await axios.get(
       `https://dhrutham-connect-backend.janaki23.repl.co/users`,
@@ -28,13 +28,9 @@ export const userSlice = createSlice({
   initialState: {
     currentUser: {},
     userProfile: {},
-    followingList: {},
-    followersList: {},
     userList: {},
     userProfileStatus: "idle",
     currentUserStatus: "idle",
-    followersListStatus: "idle",
-    followingListStatus: "idle",
     error: null,
   },
   reducers: {
@@ -75,7 +71,7 @@ export const userSlice = createSlice({
     //   state.error = action.error.message;
     // },
     [fetchCurrentUserData.pending]: (state, action) => {
-      state.currentUserDataStatus = "idle";
+      state.currentUserDataStatus = "loading";
     },
     [fetchCurrentUserData.fulfilled]: (state, action) => {
       state.currentUser = action.payload.user;
@@ -86,7 +82,7 @@ export const userSlice = createSlice({
       state.error = action.error.message;
     },
     [fetchUserProfile.pending]: (state, action) => {
-      state.userProfileStatus = "idle";
+      state.userProfileStatus = "loading";
     },
     [fetchUserProfile.fulfilled]: (state, action) => {
       state.userProfile = action.payload;

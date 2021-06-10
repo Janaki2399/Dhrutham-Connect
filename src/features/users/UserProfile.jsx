@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfile } from "./userSlice";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { Navigate, Outlet, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { userFollowed, userUnFollowed } from "../users/userSlice";
 
@@ -65,7 +65,7 @@ export const UserProfile = () => {
 
   return (
     <div>
-      {status === "idle" && <div className="margin-top">LOADING...</div>}
+      {status === "loading" && <div className="margin-top">LOADING...</div>}
       {status === "succeeded" && (
         <div>
           <img src={profile.photoUrl} alt="profile-pic"></img>
