@@ -1,9 +1,7 @@
 import {
   createSlice,
   createAsyncThunk,
-  createSelector,
   createEntityAdapter,
-  rejectedWithValue,
 } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -12,22 +10,33 @@ const postsAdapter = createEntityAdapter({
   sortComparer: (a, b) => b.createdAt.localeCompare(a.createdAt),
 });
 
-export const fetchPosts = createAsyncThunk(
-  "posts/fetchPosts",
-  async (token) => {
-    const response = await axios.get(
-      "https://dhrutham-connect-backend.janaki23.repl.co/posts",
-      {
-        headers: {
-          authorization: token,
-        },
-      }
-    );
+export const fetchFeed = createAsyncThunk("posts/fetchFeed", async (token) => {
+  const response = await axios.get(
+    "https://dhrutham-connect-backend.janaki23.repl.co/posts",
+    {
+      headers: {
+        authorization: token,
+      },
+    }
+  );
 
+  return response.data.postList;
+});
+export const fetchPostsOfUser = createAsyncThunk(
+  "posts/fetchPostsOfUser",
+  async (userName) => {
+    const response = await axios.get(
+      `https://dhrutham-connect-backend.janaki23.repl.co/posts/${userName}`
+      // {
+      //   headers: {
+      //     authorization: token,
+      //   },
+      // }
+    );
+    console.log(response.data.postList);
     return response.data.postList;
   }
 );
-
 export const addPost = createAsyncThunk(
   "posts/addPost",
   async (data, { rejectWithValue }) => {
@@ -76,22 +85,37 @@ export const unlikePost = createAsyncThunk("posts/unlikePost", async (data) => {
 export const postsSlice = createSlice({
   name: "posts",
   initialState: postsAdapter.getInitialState({
-    status: "idle",
+    feedStatus: "idle",
+    userProfilePostsStatus: "idle",
     error: null,
     addStatus: "idle",
   }),
   reducers: {},
   extraReducers: {
-    [fetchPosts.pending]: (state, action) => {
-      state.status = "loading";
+    [fetchFeed.pending]: (state, action) => {
+      state.feedStatus = "loading";
     },
-    [fetchPosts.fulfilled]: (state, action) => {
-      state.status = "succeeded";
+    [fetchFeed.fulfilled]: (state, action) => {
+      state.feedStatus = "succeeded";
+      postsAdapter.removeAll(state);
       // Add any fetched posts to the array
       postsAdapter.upsertMany(state, action.payload);
     },
-    [fetchPosts.rejected]: (state, action) => {
-      state.status = "failed";
+    [fetchFeed.rejected]: (state, action) => {
+      state.feedStatus = "failed";
+      state.error = action.error.message;
+    },
+    [fetchPostsOfUser.pending]: (state, action) => {
+      state.userProfilePostsStatus = "loading";
+    },
+    [fetchPostsOfUser.fulfilled]: (state, action) => {
+      state.userProfilePostsStatus = "succeeded";
+      // Add any fetched posts to the array
+      postsAdapter.removeAll(state);
+      postsAdapter.upsertMany(state, action.payload);
+    },
+    [fetchPostsOfUser.rejected]: (state, action) => {
+      state.userProfilePostsStatus = "failed";
       state.error = action.error.message;
     },
     [addPost.pending]: (state, action) => {

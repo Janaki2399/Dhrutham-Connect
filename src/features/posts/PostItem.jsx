@@ -5,7 +5,7 @@ import { LikeButton } from "./LikeButton";
 
 export const PostItem = ({ postId }) => {
   const post = useSelector((state) => selectPostById(state, postId));
-
+  console.log({ post });
   const calculateTimeAgo = () => {
     const date = parseISO(post.createdAt);
     const timePeriod = formatDistanceToNowStrict(date);

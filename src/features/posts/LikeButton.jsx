@@ -6,8 +6,8 @@ export const LikeButton = ({ post }) => {
   const token = useSelector((state) => state.auth.token);
   const dispatch = useDispatch();
 
-  console.log(currentUserId);
-  console.log({ post });
+  //   console.log(currentUserId);
+  //   console.log({ post });
 
   const isLiked = () => {
     return post.likes.includes(currentUserId);

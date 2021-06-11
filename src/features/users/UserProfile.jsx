@@ -4,9 +4,12 @@ import { fetchUserProfile } from "./userSlice";
 import { Navigate, Outlet, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { userFollowed, userUnFollowed } from "../users/userSlice";
+import { fetchPostsOfUser } from "../posts/postsSlice";
+import { PostsList } from "../posts/PostsList";
 
 export const UserProfile = () => {
   const status = useSelector((state) => state.user.userProfileStatus);
+  const postStatus = useSelector((state) => state.posts.userProfilePostsStatus);
   const profile = useSelector((state) => state.user.userProfile);
   const currentUser = useSelector((state) => state.user.currentUser);
   const token = useSelector((state) => state.auth.token);
@@ -16,6 +19,10 @@ export const UserProfile = () => {
 
   useEffect(() => {
     dispatch(fetchUserProfile(userName));
+  }, [dispatch, userName]);
+
+  useEffect(() => {
+    dispatch(fetchPostsOfUser(userName));
   }, [dispatch, userName]);
 
   const isUserInFollowingList = () => {
@@ -90,6 +97,11 @@ export const UserProfile = () => {
           <div onClick={() => navigate(`/users/${profile.userName}/following`)}>
             Following : {profile.following?.length}
           </div>
+        </div>
+      )}
+      {postStatus === "succeeded" && (
+        <div>
+          <PostsList />
         </div>
       )}
     </div>

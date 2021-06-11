@@ -1,19 +1,18 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { PostItem } from "./PostItem";
-import { fetchPosts, selectPostIds } from "./postsSlice";
+import { fetchFeed, selectPostIds } from "./postsSlice";
 
 export const PostsList = () => {
-  const status = useSelector((state) => state.posts.status);
+  const feedStatus = useSelector((state) => state.posts.feedStatus);
   const token = useSelector((state) => state.auth.token);
   const postsListIds = useSelector(selectPostIds);
-
-  const dispatch = useDispatch();
-  useEffect(() => {
-    if (status === "idle") {
-      dispatch(fetchPosts(token));
-    }
-  }, [status, dispatch, token]);
+  console.log(postsListIds);
+  // console.log(postsListIds);
+  // const dispatch = useDispatch();
+  // useEffect(() => {
+  //   dispatch(fetchFeed(token));
+  // }, [token]);
 
   return (
     <div>
