@@ -2,9 +2,14 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 export const fetchUserProfile = createAsyncThunk(
   "users/userProfile",
-  async (userName) => {
+  async ({ userName, token }) => {
     const response = await axios.get(
-      `https://dhrutham-connect-backend.janaki23.repl.co/users/${userName}`
+      `https://dhrutham-connect-backend.janaki23.repl.co/users/${userName}`,
+      {
+        headers: {
+          authorization: token,
+        },
+      }
     );
     return response.data.userDetails;
   }
@@ -23,6 +28,39 @@ export const fetchCurrentUserData = createAsyncThunk(
     return response.data;
   }
 );
+
+export const updateUserProfile = createAsyncThunk(
+  "users/editProfile",
+  async ({ details, token }) => {
+    const response = await axios.post(
+      `https://dhrutham-connect-backend.janaki23.repl.co/users/editProfile`,
+      { details },
+      {
+        headers: {
+          authorization: token,
+        },
+      }
+    );
+
+    return response.data.updatedProfile;
+  }
+);
+export const fetchUserListOnSearch = createAsyncThunk(
+  "users/searchUser",
+  async ({ searchQuery, token }) => {
+    // console.log(searchQuery);
+    const response = await axios.get(
+      `https://dhrutham-connect-backend.janaki23.repl.co/users/search/query?name=${searchQuery}`,
+      {
+        headers: {
+          authorization: token,
+        },
+      }
+    );
+
+    return response.data.updatedProfile;
+  }
+);
 export const userSlice = createSlice({
   name: "user",
   initialState: {
@@ -31,6 +69,7 @@ export const userSlice = createSlice({
     userList: {},
     userProfileStatus: "idle",
     currentUserStatus: "idle",
+    profileUpdateStatus: "idle",
     error: null,
   },
   reducers: {
@@ -39,10 +78,6 @@ export const userSlice = createSlice({
       state.userProfile.followers.push(action.payload.currentUserId);
     },
     userUnFollowed: (state, action) => {
-      // const profileUserIndex = findIndex(
-      //   action.payload.profileUserId,
-      //   state.current.following
-      // );
       const profileUserIndex = state.currentUser.following.indexOf(
         action.payload.profileUserId
       );
@@ -50,26 +85,19 @@ export const userSlice = createSlice({
         action.payload.currentUserId
       );
 
-      // findIndex(
-      //   action.payload.profileUserId,
-      //   state.current.following
-      // );
       state.currentUser.following.splice(profileUserIndex, 1);
       state.userProfile.followers.splice(currentUserIndex, 1);
     },
+    usersReset: (state, action) => {
+      state.currentUser = {};
+      state.userProfile = {};
+      state.userList = {};
+      state.userProfileStatus = "idle";
+      state.currentUserStatus = "idle";
+      state.error = null;
+    },
   },
   extraReducers: {
-    // [fetchLoggedInUserData.pending]: (state, action) => {
-    //   state.loggedInUserDataStatus = "idle";
-    // },
-    // [fetchLoggedInUserData.fulfilled]: (state, action) => {
-    //   state.loggedInUserData = action.payload;
-    //   state.loggedInUserDataStatus = "succeeded";
-    // },
-    // [fetchLoggedInUserData.rejected]: (state, action) => {
-    //   state.loggedInUserDataStatus = "failed";
-    //   state.error = action.error.message;
-    // },
     [fetchCurrentUserData.pending]: (state, action) => {
       state.currentUserDataStatus = "loading";
     },
@@ -92,6 +120,17 @@ export const userSlice = createSlice({
       state.userProfileStatus = "failed";
       state.error = action.error.message;
     },
+
+    [updateUserProfile.pending]: (state, action) => {
+      state.profileUpdateStatus = "loading";
+    },
+    [updateUserProfile.fulfilled]: (state, action) => {
+      state.userProfile = action.payload;
+      state.profileUpdateStatus = "succeeded";
+    },
+    [updateUserProfile.rejected]: (state, action) => {
+      state.profileUpdateStatus = "rejected";
+    },
     // [logoutButtonClicked]: (state, action) => {
     //   state.userProfile = {};
     //   state.userList = {};
@@ -100,5 +139,5 @@ export const userSlice = createSlice({
     // },
   },
 });
-export const { userFollowed, userUnFollowed } = userSlice.actions;
+export const { userFollowed, userUnFollowed, usersReset } = userSlice.actions;
 export default userSlice.reducer;

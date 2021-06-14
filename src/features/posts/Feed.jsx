@@ -11,7 +11,7 @@ export const Feed = () => {
   const feedStatus = useSelector((state) => state.posts.feedStatus);
   useEffect(() => {
     dispatch(fetchFeed(token));
-  }, [token]);
+  }, [token, dispatch]);
 
   return (
     <>

@@ -6,6 +6,8 @@ import axios from "axios";
 import { userFollowed, userUnFollowed } from "../users/userSlice";
 import { fetchPostsOfUser } from "../posts/postsSlice";
 import { PostsList } from "../posts/PostsList";
+import { Modal } from "./modal";
+import { EditUserProfile } from "./EditUserProfile";
 
 export const UserProfile = () => {
   const status = useSelector((state) => state.user.userProfileStatus);
@@ -13,17 +15,18 @@ export const UserProfile = () => {
   const profile = useSelector((state) => state.user.userProfile);
   const currentUser = useSelector((state) => state.user.currentUser);
   const token = useSelector((state) => state.auth.token);
+  const [modal, setModal] = useState(false);
   const { userName } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  console.log({ profile });
+  useEffect(() => {
+    dispatch(fetchUserProfile({ userName, token }));
+  }, [dispatch, userName, token]);
 
   useEffect(() => {
-    dispatch(fetchUserProfile(userName));
-  }, [dispatch, userName]);
-
-  useEffect(() => {
-    dispatch(fetchPostsOfUser(userName));
-  }, [dispatch, userName]);
+    dispatch(fetchPostsOfUser({ userName, token }));
+  }, [dispatch, userName, token]);
 
   const isUserInFollowingList = () => {
     return currentUser.following?.includes(profile._id);
@@ -75,7 +78,20 @@ export const UserProfile = () => {
       {status === "loading" && <div className="margin-top">LOADING...</div>}
       {status === "succeeded" && (
         <div>
+          {modal && (
+            <Modal setModal={setModal}>
+              <EditUserProfile />
+            </Modal>
+          )}
           <img src={profile.photoUrl} alt="profile-pic"></img>
+          {currentUser.userName === userName && (
+            <button
+              className="btn btn-primary-outline"
+              onClick={() => setModal(true)}
+            >
+              Edit Profile
+            </button>
+          )}
           <div className="margin-top">
             {profile.firstName} {profile.lastName}
           </div>
@@ -91,11 +107,18 @@ export const UserProfile = () => {
             </button>
           )}
           <div>{profile.userName}</div>
+          <div>{profile.bio}</div>
           <div onClick={() => navigate(`/users/${profile.userName}/followers`)}>
             Followers : {profile.followers?.length}
           </div>
           <div onClick={() => navigate(`/users/${profile.userName}/following`)}>
             Following : {profile.following?.length}
+          </div>
+          <div>{profile.location}</div>
+          <div>
+            <a href={profile.websiteLink} target="_blank" rel="noreferrer">
+              {profile.websiteLink}
+            </a>
           </div>
         </div>
       )}

@@ -8,6 +8,7 @@ export const CreatePost = () => {
   const token = useSelector((state) => state.auth.token);
   const status = useSelector((state) => state.posts.addStatus);
   const error = useSelector((state) => state.posts.error);
+
   const createPost = async (e) => {
     try {
       e.preventDefault();

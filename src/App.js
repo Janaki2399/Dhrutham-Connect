@@ -6,8 +6,9 @@ import { Login } from "./features/auth/Login";
 import { PostsList } from "./features/posts/PostsList";
 import { CreatePost } from "./features/posts/CreatePost";
 import { SignUp } from "./features/auth/SignUp";
+import { PrivateRoute } from "./features/auth/PrivateRoute";
 import { UserProfile } from "./features/users/UserProfile";
-// import { FollowingList } from "./features/users/FollowingList";
+import { NotificationList } from "./features/notifications/NotificationList";
 import { FollowerFollowingList } from "./features/users/FollowerFollowingList";
 import { fetchCurrentUserData } from "./features/users/userSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,21 +26,23 @@ function App() {
 
   return (
     <div className="App">
-      <Navbar />
+      {token && <Navbar />}
+
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         {/* <Route path="/feed" element={<PostsList />} /> */}
-        <Route path="/users/:userName" element={<UserProfile />} />
-        <Route
+        <PrivateRoute path={"/users/:userName"} element={<UserProfile />} />
+        <PrivateRoute
           path="/users/:userName/following"
           element={<FollowerFollowingList />}
         />
-        <Route
+        <PrivateRoute
           path="/users/:userName/followers"
           element={<FollowerFollowingList />}
         />
-        <Route path="/feed" element={<Feed />} />
+        <PrivateRoute path={"/feed"} element={<Feed />} />
+        <PrivateRoute path={"/notification"} element={<NotificationList />} />
       </Routes>
     </div>
   );

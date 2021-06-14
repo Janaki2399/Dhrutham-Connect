@@ -24,16 +24,15 @@ export const fetchFeed = createAsyncThunk("posts/fetchFeed", async (token) => {
 });
 export const fetchPostsOfUser = createAsyncThunk(
   "posts/fetchPostsOfUser",
-  async (userName) => {
+  async ({ userName, token }) => {
     const response = await axios.get(
-      `https://dhrutham-connect-backend.janaki23.repl.co/posts/${userName}`
-      // {
-      //   headers: {
-      //     authorization: token,
-      //   },
-      // }
+      `https://dhrutham-connect-backend.janaki23.repl.co/posts/${userName}`,
+      {
+        headers: {
+          authorization: token,
+        },
+      }
     );
-    console.log(response.data.postList);
     return response.data.postList;
   }
 );
@@ -41,19 +40,22 @@ export const addPost = createAsyncThunk(
   "posts/addPost",
   async (data, { rejectWithValue }) => {
     // console.log(text);
-
-    const response = await axios.post(
-      "https://dhrutham-connect-backend.janaki23.repl.co/posts",
-      {
-        text: data.text,
-      },
-      {
-        headers: {
-          authorization: data.token,
+    try {
+      const response = await axios.post(
+        "https://dhrutham-connect-backend.janaki23.repl.co/posts",
+        {
+          text: data.text,
         },
-      }
-    );
-    return response.data;
+        {
+          headers: {
+            authorization: data.token,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
   }
 );
 
@@ -90,7 +92,15 @@ export const postsSlice = createSlice({
     error: null,
     addStatus: "idle",
   }),
-  reducers: {},
+  reducers: {
+    postsReset: (state, action) => {
+      postsAdapter.removeAll(state);
+      state.feedStatus = "idle";
+      state.userProfilePostsStatus = "idle";
+      state.addStatus = "idle";
+      state.error = "null";
+    },
+  },
   extraReducers: {
     [fetchFeed.pending]: (state, action) => {
       state.feedStatus = "loading";
@@ -129,7 +139,7 @@ export const postsSlice = createSlice({
     },
     [addPost.rejected]: (state, action) => {
       state.addStatus = "failed";
-      // state.error = action.payload;
+      state.error = action.payload.message;
     },
 
     [likePost.fulfilled]: (state, action) => {
@@ -145,7 +155,7 @@ export const postsSlice = createSlice({
     },
   },
 });
-export const {} = postsSlice.actions;
+export const { postsReset } = postsSlice.actions;
 export default postsSlice.reducer;
 export const {
   selectAll: selectAllPosts,

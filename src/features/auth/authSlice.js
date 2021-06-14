@@ -37,14 +37,14 @@ export const authSlice = createSlice({
   initialState: initialState,
 
   reducers: {
-    logoutButtonClicked: (state, action) => {
+    authReset: (state, action) => {
       state.token = null;
       state.loginStatus = "idle";
       state.signUpStatus = "idle";
     },
-    userFollowed: (state, action) => {
-      state.currentUser.following.push(action.payload);
-    },
+    // userFollowed: (state, action) => {
+    //   state.currentUser.following.push(action.payload);
+    // },
   },
   extraReducers: {
     [userLogin.pending]: (state, action) => {
@@ -71,5 +71,5 @@ export const authSlice = createSlice({
     },
   },
 });
-export const { logoutButtonClicked, userFollowed } = authSlice.actions;
+export const { authReset, userFollowed } = authSlice.actions;
 export default authSlice.reducer;

@@ -2,3 +2,36 @@
 /* .App {
 
 } */
+.text-area {
+  width: 90%;
+  padding: 2px 5px;
+  border: 1px solid var(--gray-color);
+  border-radius: 3px;
+  font-size: 14px;
+  margin-top: 3px;
+  margin-bottom: 1rem;
+  margin-right: 2rem;
+  height: 3rem;
+}
+.text-area:focus {
+  outline-width: thin;
+  outline-color: #60a5fa;
+}
+
+.search-input {
+  height: 1.3rem;
+  width: 20rem;
+  outline: none;
+  font-size: 1rem;
+  border: transparent;
+}
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.2rem;
+  border: 1px solid gray;
+  border-radius: 0.1rem;
+  color: white;
+  height: 1.4rem;
+}

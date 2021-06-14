@@ -72,8 +72,8 @@ export const SignUp = () => {
   return (
     <form
       onSubmit={handleSignUp}
-      className="center-align-ver-hor border-all gray-border padding-all"
-      style={{ width: "90%", maxWidth: "20rem" }}
+      className="center-page-align border-all gray-border padding-all"
+      style={{ width: "90%", maxWidth: "21rem" }}
       noValidate
     >
       <div className="font-size-3 margin-bottom text-center">Sign Up</div>

@@ -38,7 +38,7 @@ export const Login = () => {
         e.preventDefault();
         onlogin();
       }}
-      className="center-align-ver-hor border-all gray-border padding-all"
+      className="center-page-align border-all gray-border padding-all"
       style={{ width: "90%", maxWidth: "20rem" }}
     >
       <div className="font-size-3 margin-bottom text-center">Login</div>
