@@ -26,7 +26,7 @@ export const LikeButton = ({ post }) => {
   };
 
   return (
-    <div>
+    <div className="flex-horizontal margin-top">
       <button
         className="icon-btn"
         onClick={() => {
@@ -43,7 +43,7 @@ export const LikeButton = ({ post }) => {
           favorite
         </span>
       </button>
-      <span>{post.likes.length}</span>
+      <span>{post.likes.length} likes</span>
     </div>
   );
 };

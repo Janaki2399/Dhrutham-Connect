@@ -3,13 +3,14 @@ import "./App.css";
 import { Navbar } from "./app/Navbar";
 import { Routes, Route } from "react-router-dom";
 import { Login } from "./features/auth/Login";
-import { PostsList } from "./features/posts/PostsList";
-import { CreatePost } from "./features/posts/CreatePost";
 import { SignUp } from "./features/auth/SignUp";
 import { PrivateRoute } from "./features/auth/PrivateRoute";
 import { UserProfile } from "./features/users/UserProfile";
 import { NotificationList } from "./features/notifications/NotificationList";
-import { FollowerFollowingList } from "./features/users/FollowerFollowingList";
+import {
+  Connections,
+  FollowerFollowingList,
+} from "./features/users/Connections";
 import { fetchCurrentUserData } from "./features/users/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Feed } from "./features/posts/Feed";
@@ -35,11 +36,11 @@ function App() {
         <PrivateRoute path={"/users/:userName"} element={<UserProfile />} />
         <PrivateRoute
           path="/users/:userName/following"
-          element={<FollowerFollowingList />}
+          element={<Connections />}
         />
         <PrivateRoute
           path="/users/:userName/followers"
-          element={<FollowerFollowingList />}
+          element={<Connections />}
         />
         <PrivateRoute path={"/feed"} element={<Feed />} />
         <PrivateRoute path={"/notification"} element={<NotificationList />} />

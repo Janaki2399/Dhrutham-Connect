@@ -19,7 +19,7 @@ export const UserProfile = () => {
   const { userName } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  console.log({ profile });
+
   useEffect(() => {
     dispatch(fetchUserProfile({ userName, token }));
   }, [dispatch, userName, token]);
@@ -72,53 +72,117 @@ export const UserProfile = () => {
       }
     } catch (error) {}
   };
+  if (status === "loading") {
+    return <div className="margin-top">LOADING...</div>;
+  }
+  const createdAt = profile.createdAt;
+  const date = new Date(createdAt).toDateString();
 
   return (
     <div>
-      {status === "loading" && <div className="margin-top">LOADING...</div>}
+      {/* {status === "loading" && <div className="margin-top">LOADING...</div>} */}
       {status === "succeeded" && (
-        <div>
+        <div style={{ width: "90%", maxWidth: "35rem", margin: "auto" }}>
           {modal && (
             <Modal setModal={setModal}>
               <EditUserProfile />
             </Modal>
           )}
-          <img src={profile.photoUrl} alt="profile-pic"></img>
-          {currentUser.userName === userName && (
-            <button
-              className="btn btn-primary-outline"
-              onClick={() => setModal(true)}
-            >
-              Edit Profile
-            </button>
-          )}
-          <div className="margin-top">
-            {profile.firstName} {profile.lastName}
-          </div>
-          {currentUser.userName !== userName && (
-            <button
-              onClick={() => {
-                isUserInFollowingList()
-                  ? unFollowUser(profile._id)
-                  : followUser(profile._id);
-              }}
-            >
-              {isUserInFollowingList() ? "Following" : "Follow"}
-            </button>
-          )}
-          <div>{profile.userName}</div>
-          <div>{profile.bio}</div>
-          <div onClick={() => navigate(`/users/${profile.userName}/followers`)}>
-            Followers : {profile.followers?.length}
-          </div>
-          <div onClick={() => navigate(`/users/${profile.userName}/following`)}>
-            Following : {profile.following?.length}
-          </div>
-          <div>{profile.location}</div>
-          <div>
-            <a href={profile.websiteLink} target="_blank" rel="noreferrer">
-              {profile.websiteLink}
-            </a>
+          <div className="flex-horizontal ">
+            <div className="img-margin margin-right margin-top img-size-large">
+              <img
+                className="round-img img-size-large responsive-img"
+                src={profile.photoUrl}
+                alt="profile-pic"
+              ></img>
+            </div>
+            <div className="margin-top full-width">
+              <div className="flex-horizontal space-between">
+                <div className="flex-column">
+                  <div className="font-size-3 font-bold-1">
+                    {profile.firstName} {profile.lastName}
+                  </div>
+                  <div>{profile.userName}</div>
+                </div>
+                {currentUser.userName === userName && (
+                  <button
+                    className="profile-btn btn-primary-contained"
+                    onClick={() => setModal(true)}
+                  >
+                    Edit Profile
+                  </button>
+                )}
+                {currentUser.userName !== userName && (
+                  <button
+                    className="profile-btn btn-primary-contained "
+                    onClick={() => {
+                      isUserInFollowingList()
+                        ? unFollowUser(profile._id)
+                        : followUser(profile._id);
+                    }}
+                  >
+                    {isUserInFollowingList() ? "Following" : "Follow"}
+                  </button>
+                )}
+              </div>
+
+              <div className="flex-horizontal margin-top">
+                <div
+                  className="margin-right cursor-pointer"
+                  onClick={() =>
+                    navigate(`/users/${profile.userName}/followers`)
+                  }
+                >
+                  <span className="font-bold-1">
+                    {profile.followers?.length}
+                  </span>{" "}
+                  Followers{" "}
+                </div>
+                <div
+                  className="margin-right cursor-pointer"
+                  onClick={() =>
+                    navigate(`/users/${profile.userName}/following`)
+                  }
+                >
+                  <span className="font-bold-1">
+                    {profile.following?.length}
+                  </span>{" "}
+                  Following
+                </div>
+              </div>
+              <div className="margin-top">{profile.bio}</div>
+              {profile.location.length > 0 && (
+                <div className="flex-horizontal margin-top">
+                  <span className="material-icons-outlined icon-color-gray icon-size-24">
+                    link
+                  </span>
+                  <a
+                    href={profile.websiteLink}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {profile.websiteLink}
+                  </a>
+                </div>
+              )}
+              <div className="flex-horizontal margin-top full-width">
+                {profile.location.length > 0 && (
+                  <div className="flex-horizontal margin-right">
+                    <span className="material-icons-outlined icon-color-gray icon-size-24">
+                      place
+                    </span>
+                    {profile.location}
+                  </div>
+                )}
+
+                <div className="flex-horizontal margin-right">
+                  <span className="material-icons-outlined icon-color-gray icon-size-24">
+                    date_range
+                  </span>
+                  {date}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}

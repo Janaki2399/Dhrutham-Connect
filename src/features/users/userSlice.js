@@ -78,14 +78,15 @@ export const userSlice = createSlice({
       state.userProfile.followers.push(action.payload.currentUserId);
     },
     userUnFollowed: (state, action) => {
+      console.log(action.payload.profileUserId);
+      console.log(state.currentUser);
       const profileUserIndex = state.currentUser.following.indexOf(
         action.payload.profileUserId
       );
+      state.currentUser.following.splice(profileUserIndex, 1);
       const currentUserIndex = state.userProfile.followers.indexOf(
         action.payload.currentUserId
       );
-
-      state.currentUser.following.splice(profileUserIndex, 1);
       state.userProfile.followers.splice(currentUserIndex, 1);
     },
     usersReset: (state, action) => {

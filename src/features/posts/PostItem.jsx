@@ -2,9 +2,10 @@ import { selectPostById } from "./postsSlice";
 import { useSelector } from "react-redux";
 import { LikeButton } from "./LikeButton";
 import { TimeAgo } from "./TimeAgo";
+import { Navigate, useNavigate } from "react-router";
 export const PostItem = ({ postId }) => {
   const post = useSelector((state) => selectPostById(state, postId));
-
+  const navigate = useNavigate();
   // const calculateTimeAgo = () => {
   //   const date = parseISO(post.createdAt);
   //   const timePeriod = formatDistanceToNowStrict(date);
@@ -32,8 +33,8 @@ export const PostItem = ({ postId }) => {
 
   return (
     <div
-      className="card card-vertical card-content-padding"
-      style={{ width: "60%" }}
+      className="card card-vertical card-content-padding margin-top"
+      // style={{ width: "60%" }}
     >
       <div className="card-header">
         <div className="img-margin">
@@ -45,7 +46,12 @@ export const PostItem = ({ postId }) => {
         </div>
         <div className="card-text">
           <div>
-            <span className="font-bold-1">{post.userId.firstName}</span>{" "}
+            <span
+              className="font-bold-1 cursor-pointer user-link"
+              onClick={() => navigate(`/users/${post.userId.userName}`)}
+            >
+              {post.userId.firstName} {post.userId.lastName}
+            </span>
           </div>
           <div className="font-size-6 text-gray">{post.userId.bio}</div>
           <TimeAgo post={post} />

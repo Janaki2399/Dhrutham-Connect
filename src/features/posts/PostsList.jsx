@@ -4,7 +4,6 @@ import { selectPostIds } from "./postsSlice";
 
 export const PostsList = () => {
   const feedStatus = useSelector((state) => state.posts.feedStatus);
-  console.log(feedStatus);
   // const token = useSelector((state) => state.auth.token);
   const postsListIds = useSelector(selectPostIds);
   // console.log(postsListIds);
@@ -17,10 +16,18 @@ export const PostsList = () => {
     return <div>Loading</div>;
   }
   return (
-    <div>
+    <section
+      className=""
+      style={{
+        width: "90%",
+        maxWidth: "35rem",
+        margin: "auto",
+        marginTop: "3rem",
+      }}
+    >
       {postsListIds.map((postId) => {
         return <PostItem key={postId} postId={postId} />;
       })}
-    </div>
+    </section>
   );
 };

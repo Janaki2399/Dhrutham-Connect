@@ -1,7 +1,8 @@
 @import url("https://dhrutham-ui.netlify.app/CSS/dhrutham.css");
-/* .App {
-
-} */
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap");
+.App {
+  font-family: "Segoe UI", "Ubuntu", "Cantarell", "Fira Sans", sans-serif;
+}
 .text-area {
   width: 90%;
   padding: 2px 5px;
@@ -20,18 +21,75 @@
 
 .search-input {
   height: 1.3rem;
-  width: 20rem;
+  width: 14rem;
   outline: none;
   font-size: 1rem;
   border: transparent;
 }
 .input-wrapper {
   display: flex;
+  position: relative;
   align-items: center;
   justify-content: space-between;
   padding: 0.2rem;
-  border: 1px solid gray;
+  border: 1px var(--gray-color) solid;
   border-radius: 0.1rem;
   color: white;
   height: 1.4rem;
+}
+
+.autocomplete {
+  position: absolute;
+  width: 100%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  /* padding: 1rem; */
+  /* border: 1px solid gray; */
+  background-color: white;
+}
+
+.post-btn {
+  float: right;
+}
+
+.create-post {
+  width: 90%;
+  max-width: 34rem;
+  margin: auto;
+  margin-top: 3rem;
+  padding: 0.5rem;
+  border: 1px var(--gray-color) solid;
+}
+
+.post-text-area {
+  height: 5rem;
+  font-size: 1.2rem;
+  border: none;
+  border-bottom: 1px gainsboro solid;
+  outline: none;
+  /* font-family: ;
+  max
+} */
+}
+
+.float-right {
+  float: right;
+}
+
+.profile-btn {
+  height: 2rem;
+  padding: 0.4rem 0.5rem;
+  border: 1px var(--gray-color) solid;
+  /* border: none;
+  outline: none; */
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.user-link:hover {
+  text-decoration: underline;
+}
+
+.autocomplete-item:hover {
+  background-color: #e5e7eb;
 }

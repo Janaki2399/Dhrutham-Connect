@@ -72,14 +72,18 @@ export const Navbar = () => {
           className="nav-item cursor-pointer margin-right"
           onClick={() => navigate(`/users/${loggedInUserData.userName}`)}
         >
-          My profile
+          <img
+            className="round-img img-size-xs"
+            src={loggedInUserData.photoUrl}
+            alt="profile-pic"
+          />
         </div>
         <div
           className="nav-item cursor-pointer margin-right"
           onClick={() => navigate(`/notification`)}
         >
           <span
-            className={"material-icons-outlined icon-color-gray icon-size-24"}
+            className={"material-icons-outlined icon-color-gray icon-size-28"}
           >
             notifications
           </span>
