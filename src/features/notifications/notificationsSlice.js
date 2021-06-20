@@ -4,7 +4,7 @@ import {
   createEntityAdapter,
 } from "@reduxjs/toolkit";
 import axios from "axios";
-
+import { API_URL } from "../../config";
 const notificationsAdapter = createEntityAdapter({
   selectId: (notification) => notification._id,
   sortComparer: (a, b) => b.createdAt.localeCompare(a.createdAt),
@@ -13,14 +13,11 @@ const notificationsAdapter = createEntityAdapter({
 export const fetchNotifications = createAsyncThunk(
   "notifications/fetchNotifications",
   async (token) => {
-    const response = await axios.get(
-      "https://dhrutham-connect-backend.janaki23.repl.co/notifications",
-      {
-        headers: {
-          authorization: token,
-        },
-      }
-    );
+    const response = await axios.get(`${API_URL}/notifications`, {
+      headers: {
+        authorization: token,
+      },
+    });
 
     return response.data.notificationList;
   }
