@@ -1,30 +1,25 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { API_URL } from "../../config";
 export const fetchUserProfile = createAsyncThunk(
   "users/userProfile",
   async ({ userName, token }) => {
-    const response = await axios.get(
-      `https://dhrutham-connect-backend.janaki23.repl.co/users/${userName}`,
-      {
-        headers: {
-          authorization: token,
-        },
-      }
-    );
+    const response = await axios.get(`${API_URL}/users/${userName}`, {
+      headers: {
+        authorization: token,
+      },
+    });
     return response.data.userDetails;
   }
 );
 export const fetchCurrentUserData = createAsyncThunk(
   "users/currentUser",
   async (token) => {
-    const response = await axios.get(
-      `https://dhrutham-connect-backend.janaki23.repl.co/users`,
-      {
-        headers: {
-          authorization: token,
-        },
-      }
-    );
+    const response = await axios.get(`${API_URL}/users`, {
+      headers: {
+        authorization: token,
+      },
+    });
     return response.data;
   }
 );
@@ -33,7 +28,7 @@ export const updateUserProfile = createAsyncThunk(
   "users/editProfile",
   async ({ details, token }) => {
     const response = await axios.post(
-      `https://dhrutham-connect-backend.janaki23.repl.co/users/editProfile`,
+      `${API_URL}/users/editProfile`,
       { details },
       {
         headers: {
@@ -50,7 +45,7 @@ export const fetchUserListOnSearch = createAsyncThunk(
   async ({ searchQuery, token }) => {
     // console.log(searchQuery);
     const response = await axios.get(
-      `https://dhrutham-connect-backend.janaki23.repl.co/users/search/query?name=${searchQuery}`,
+      `${API_URL}/users/search/query?name=${searchQuery}`,
       {
         headers: {
           authorization: token,

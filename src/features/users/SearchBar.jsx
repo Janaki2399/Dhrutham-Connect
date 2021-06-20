@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { UsersListDropDown } from "./UsersListDropDown";
+import { API_URL } from "../../config";
 
 const APIStatus = {
   IDLE: "idle",
@@ -34,7 +35,7 @@ export const SearchBar = () => {
     try {
       setStatus(APIStatus.LOADING);
       const { data, status } = await axios.get(
-        `https://dhrutham-connect-backend.janaki23.repl.co/users/search/query?name=${searchQuery}`,
+        `${API_URL}/users/search/query?name=${searchQuery}`,
         {
           headers: {
             authorization: token,

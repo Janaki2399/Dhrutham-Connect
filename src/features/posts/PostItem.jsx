@@ -6,30 +6,6 @@ import { Navigate, useNavigate } from "react-router";
 export const PostItem = ({ postId }) => {
   const post = useSelector((state) => selectPostById(state, postId));
   const navigate = useNavigate();
-  // const calculateTimeAgo = () => {
-  //   const date = parseISO(post.createdAt);
-  //   const timePeriod = formatDistanceToNowStrict(date);
-  //   const timeWithShortUnit = timePeriod.replace(
-  //     /\w+$/,
-  //     (unit) =>
-  //       ({
-  //         minute: "m",
-  //         minutes: "m",
-  //         hour: "h",
-  //         hours: "h",
-  //         second: "s",
-  //         seconds: "s",
-  //         day: "d",
-  //         days: "d",
-  //         year: "y",
-  //         years: "y",
-  //         weeks: "w",
-  //         week: "w",
-  //       }[unit])
-  //   );
-  //   const timeWithoutSpace = timeWithShortUnit.replace(/\s+/g, "");
-  //   return timeWithoutSpace;
-  // };
 
   return (
     <div

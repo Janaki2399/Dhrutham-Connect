@@ -6,18 +6,16 @@ export const LikeButton = ({ post }) => {
   const token = useSelector((state) => state.auth.token);
   const dispatch = useDispatch();
 
-  //   console.log(currentUserId);
-  //   console.log({ post });
-
   const isLiked = () => {
     return post.likes.includes(currentUserId);
   };
 
   const likePostByUser = async () => {
-    // dispatch(postLiked(currentUserId));
     try {
       await dispatch(likePost({ postId: post._id, token }));
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
   const unlikePostUser = async () => {
     try {

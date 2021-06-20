@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { userFollowed, userUnFollowed } from "./userSlice";
+import { API_URL } from "../../config";
 import axios from "axios";
 
 export const Connections = () => {
@@ -19,7 +20,7 @@ export const Connections = () => {
     (async function () {
       try {
         const { data, status } = await axios.get(
-          `https://dhrutham-connect-backend.janaki23.repl.co${location.pathname}`,
+          `${API_URL}${location.pathname}`,
           {
             headers: {
               authorization: token,
@@ -38,7 +39,7 @@ export const Connections = () => {
   const followUser = async (profileUserId) => {
     try {
       const { status } = await axios.post(
-        "https://dhrutham-connect-backend.janaki23.repl.co/users/follow",
+        `${API_URL}/users/follow`,
         {
           _id: profileUserId,
         },
@@ -71,7 +72,6 @@ export const Connections = () => {
         }
       );
       if (status === 200) {
-        console.log(profileUserId);
         // setList((list) => list.filter((item) => item._id !== profileUserId));
         dispatch(
           userUnFollowed({ currentUserId: currentUser._id, profileUserId })

@@ -6,12 +6,7 @@ export const PostsList = () => {
   const feedStatus = useSelector((state) => state.posts.feedStatus);
   // const token = useSelector((state) => state.auth.token);
   const postsListIds = useSelector(selectPostIds);
-  // console.log(postsListIds);
-  // console.log(postsListIds);
-  // const dispatch = useDispatch();
-  // useEffect(() => {
-  //   dispatch(fetchFeed(token));
-  // }, [token]);
+
   if (feedStatus === "loading") {
     return <div>Loading</div>;
   }

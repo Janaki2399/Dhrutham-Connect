@@ -7,6 +7,7 @@ import { userFollowed, userUnFollowed } from "../users/userSlice";
 import { fetchPostsOfUser } from "../posts/postsSlice";
 import { PostsList } from "../posts/PostsList";
 import { Modal } from "./modal";
+import { API_URL } from "../../config";
 import { EditUserProfile } from "./EditUserProfile";
 
 export const UserProfile = () => {
@@ -34,7 +35,7 @@ export const UserProfile = () => {
   const followUser = async (profileUserId) => {
     try {
       const { status } = await axios.post(
-        "https://dhrutham-connect-backend.janaki23.repl.co/users/follow",
+        `${API_URL}/users/follow`,
         {
           _id: profileUserId,
         },
@@ -55,7 +56,7 @@ export const UserProfile = () => {
   const unFollowUser = async (profileUserId) => {
     try {
       const { status } = await axios.post(
-        "https://dhrutham-connect-backend.janaki23.repl.co/users/unfollow",
+        `${API_URL}/users/unfollow`,
         {
           _id: profileUserId,
         },

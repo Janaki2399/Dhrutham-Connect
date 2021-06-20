@@ -4,6 +4,7 @@ import {
   createEntityAdapter,
 } from "@reduxjs/toolkit";
 import axios from "axios";
+import { API_URL } from "../../config";
 
 const postsAdapter = createEntityAdapter({
   selectId: (post) => post._id,
@@ -11,28 +12,22 @@ const postsAdapter = createEntityAdapter({
 });
 
 export const fetchFeed = createAsyncThunk("posts/fetchFeed", async (token) => {
-  const response = await axios.get(
-    "https://dhrutham-connect-backend.janaki23.repl.co/posts",
-    {
-      headers: {
-        authorization: token,
-      },
-    }
-  );
+  const response = await axios.get(`${API_URL}/posts`, {
+    headers: {
+      authorization: token,
+    },
+  });
 
   return response.data.postList;
 });
 export const fetchPostsOfUser = createAsyncThunk(
   "posts/fetchPostsOfUser",
   async ({ userName, token }) => {
-    const response = await axios.get(
-      `https://dhrutham-connect-backend.janaki23.repl.co/posts/${userName}`,
-      {
-        headers: {
-          authorization: token,
-        },
-      }
-    );
+    const response = await axios.get(`${API_URL}/posts/${userName}`, {
+      headers: {
+        authorization: token,
+      },
+    });
     return response.data.postList;
   }
 );
@@ -42,7 +37,7 @@ export const addPost = createAsyncThunk(
     // console.log(text);
     try {
       const response = await axios.post(
-        "https://dhrutham-connect-backend.janaki23.repl.co/posts",
+        `${API_URL}/posts`,
         {
           text: data.text,
         },
@@ -61,7 +56,7 @@ export const addPost = createAsyncThunk(
 
 export const likePost = createAsyncThunk("posts/likePost", async (data) => {
   const response = await axios.post(
-    `https://dhrutham-connect-backend.janaki23.repl.co/posts/like/${data.postId}`,
+    `${API_URL}/posts/like/${data.postId}`,
     {},
     {
       headers: {
@@ -73,7 +68,7 @@ export const likePost = createAsyncThunk("posts/likePost", async (data) => {
 });
 export const unlikePost = createAsyncThunk("posts/unlikePost", async (data) => {
   const response = await axios.post(
-    `https://dhrutham-connect-backend.janaki23.repl.co/posts/unlike/${data.postId}`,
+    `${API_URL}/posts/unlike/${data.postId}`,
     {},
     {
       headers: {
