@@ -3,24 +3,19 @@ import {
   createAsyncThunk,
   createSlice,
 } from "@reduxjs/toolkit";
+import { API_URL } from "../../config";
 
 import axios from "axios";
 const { token: savedToken } = JSON.parse(localStorage?.getItem("login")) || {
   token: null,
 };
 export const userLogin = createAsyncThunk("/login", async (loginDetails) => {
-  const response = await axios.post(
-    "https://dhrutham-connect-backend.janaki23.repl.co/login",
-    loginDetails
-  );
+  const response = await axios.post(`${API_URL}/login`, loginDetails);
   return response.data;
 });
 
 export const userSignUp = createAsyncThunk("/signUp", async (signUpDetails) => {
-  const response = await axios.post(
-    "https://dhrutham-connect-backend.janaki23.repl.co/signup",
-    signUpDetails
-  );
+  const response = await axios.post(`${API_URL}/signup`, signUpDetails);
   return response.data;
 });
 
