@@ -13,6 +13,9 @@ export const Feed = () => {
     dispatch(fetchFeed(token));
   }, [token, dispatch]);
 
+  if (feedStatus === "loading") {
+    return <div className="loader center-page-align" />;
+  }
   return (
     <>
       <CreatePost />

@@ -19,7 +19,7 @@ export const NotificationList = () => {
   }, [dispatch, token]);
 
   if (notificationsStatus === "loading") {
-    return <div>Loading</div>;
+    return <div className="loader center-page-align" />;
   }
   return (
     <div

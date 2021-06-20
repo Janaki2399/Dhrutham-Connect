@@ -68,33 +68,34 @@ export const userSlice = createSlice({
     userProfile: {},
     userList: {},
     userProfileStatus: "idle",
-    currentUserStatus: "idle",
+    currentUserDataStatus: "idle",
     profileUpdateStatus: "idle",
     error: null,
   },
   reducers: {
     userFollowed: (state, action) => {
-      state.currentUser.following.push(action.payload.profileUserId);
-      state.userProfile.followers.push(action.payload.currentUserId);
-    },
-    userUnFollowed: (state, action) => {
-      console.log(action.payload.profileUserId);
-      console.log(state.currentUser);
-      const profileUserIndex = state.currentUser.following.indexOf(
+      state.currentUser.following = state.currentUser.following.concat(
         action.payload.profileUserId
       );
-      state.currentUser.following.splice(profileUserIndex, 1);
-      const currentUserIndex = state.userProfile.followers.indexOf(
-        action.payload.currentUserId
+    },
+    userUnFollowed: (state, action) => {
+      state.currentUser.following = state.currentUser.following.filter(
+        (userId) => userId !== action.payload.profileUserId
       );
-      state.userProfile.followers.splice(currentUserIndex, 1);
+
+      // state.currentUser.following.splice(profileUserIndex, 1);
+      // // console.log();
+      // const currentUserIndex = state.userProfile.followers.indexOf(
+      //   action.payload.currentUserId
+      // );
+      // state.userProfile.followers.splice(currentUserIndex, 1);
     },
     usersReset: (state, action) => {
       state.currentUser = {};
       state.userProfile = {};
       state.userList = {};
       state.userProfileStatus = "idle";
-      state.currentUserStatus = "idle";
+      state.currentUserDataStatus = "idle";
       state.error = null;
     },
   },

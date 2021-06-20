@@ -73,7 +73,7 @@ export const UserProfile = () => {
     } catch (error) {}
   };
   if (status === "loading") {
-    return <div className="margin-top">LOADING...</div>;
+    return <div className="loader center-page-align" />;
   }
   const createdAt = profile.createdAt;
   const date = new Date(createdAt).toDateString();

@@ -42,7 +42,7 @@ function App() {
           path="/users/:userName/followers"
           element={<Connections />}
         />
-        <PrivateRoute path={"/feed"} element={<Feed />} />
+        <PrivateRoute path={"/"} element={<Feed />} />
         <PrivateRoute path={"/notification"} element={<NotificationList />} />
       </Routes>
     </div>

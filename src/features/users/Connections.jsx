@@ -112,9 +112,9 @@ export const Connections = () => {
             <div
               key={item._id}
               className="border-all gray-border cursor-pointer"
-              onClick={() => {
-                navigate(`/users/${item.userName}`);
-              }}
+              // onClick={() => {
+              //   navigate(`/users/${item.userName}`);
+              // }}
             >
               <div className="flex-horizontal margint-top padding-all">
                 <div>

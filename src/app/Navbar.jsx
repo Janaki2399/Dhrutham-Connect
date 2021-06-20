@@ -9,6 +9,9 @@ import { SearchBar } from "../features/users/SearchBar";
 export const Navbar = () => {
   const token = useSelector((state) => state.auth.token);
   const loggedInUserData = useSelector((state) => state.user.currentUser);
+  const loggedInUserStatus = useSelector(
+    (state) => state.user.currentUserDataStatus
+  );
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -29,29 +32,11 @@ export const Navbar = () => {
     <div className="nav navbar-height ">
       <Link
         className="font-size-3 anchor-link text-color-primary cursor-pointer "
-        to="/feed"
+        to="/"
       >
-        Dhrutham Connect
+        <div class="font-size-3 text-color-primary">Dhrutham Connect</div>
       </Link>
       <SearchBar />
-      {/* <div className="gray-color input-wrapper">
-        <div>
-          <input
-            type="text"
-            className="search-input font-size-4"
-            placeholder="Search users"
-            onKeyDown={handleSearch}
-          />
-        </div>
-
-        <div className="icon-btn">
-          <span
-            className={"material-icons-outlined icon-color-gray icon-size-24"}
-          >
-            search
-          </span>
-        </div>
-      </div> */}
 
       <div className="nav-list">
         {!token ? (
@@ -67,17 +52,19 @@ export const Navbar = () => {
             Logout
           </div>
         )}
-
-        <div
-          className="nav-item cursor-pointer margin-right"
-          onClick={() => navigate(`/users/${loggedInUserData.userName}`)}
-        >
-          <img
-            className="round-img img-size-xs"
-            src={loggedInUserData.photoUrl}
-            alt="profile-pic"
-          />
-        </div>
+        {loggedInUserStatus === "succeeded" && (
+          <div
+            className="nav-item cursor-pointer margin-right"
+            onClick={() => navigate(`/users/${loggedInUserData.userName}`)}
+          >
+            <img
+              className="round-img img-size-xs"
+              src={loggedInUserData.photoUrl}
+              alt="profile-pic"
+            />
+            Hi {loggedInUserData.userName}
+          </div>
+        )}
         <div
           className="nav-item cursor-pointer margin-right"
           onClick={() => navigate(`/notification`)}
