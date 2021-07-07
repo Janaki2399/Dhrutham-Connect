@@ -4,7 +4,9 @@ import {
   createEntityAdapter,
 } from "@reduxjs/toolkit";
 import axios from "axios";
+import { logoutButtonClicked } from "../auth/authSlice";
 import { API_URL } from "../../config";
+
 const notificationsAdapter = createEntityAdapter({
   selectId: (notification) => notification._id,
   sortComparer: (a, b) => b.createdAt.localeCompare(a.createdAt),
@@ -29,26 +31,23 @@ export const notificationsSlice = createSlice({
     status: "idle",
     error: null,
   }),
-  reducers: {
-    notificationsReset: (state, action) => {
-      notificationsAdapter.removeAll(state);
-      state.status = "idle";
-      state.error = "null";
-    },
-  },
+  reducers: {},
   extraReducers: {
     [fetchNotifications.pending]: (state, action) => {
       state.status = "loading";
     },
     [fetchNotifications.fulfilled]: (state, action) => {
       state.status = "succeeded";
-      console.log(action.payload);
-      // Add any fetched posts to the array
       notificationsAdapter.upsertMany(state, action.payload);
     },
     [fetchNotifications.rejected]: (state, action) => {
       state.status = "failed";
       state.error = action.error.message;
+    },
+    [logoutButtonClicked]: (state, action) => {
+      notificationsAdapter.removeAll(state);
+      state.status = "idle";
+      state.error = "null";
     },
   },
 });

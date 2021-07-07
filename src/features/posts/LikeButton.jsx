@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { likePost } from "./postsSlice";
 import { unlikePost } from "./postsSlice";
+
 export const LikeButton = ({ post }) => {
   const currentUserId = useSelector((state) => state.user.currentUser._id);
   const token = useSelector((state) => state.auth.token);

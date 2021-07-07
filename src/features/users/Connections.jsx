@@ -1,163 +1,123 @@
-import { useEffect, useState } from "react";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { userFollowed, userUnFollowed } from "./userSlice";
-import { API_URL } from "../../config";
-import axios from "axios";
+import {
+  fetchConnections,
+  followUser,
+  unFollowUser,
+  connectionsReset,
+} from "./userSlice";
 
 export const Connections = () => {
   const location = useLocation();
-  const token = useSelector((state) => state.auth.token);
-  const navigate = useNavigate();
-  const currentUser = useSelector((state) => state.user.currentUser);
 
-  const [list, setList] = useState([]);
+  const navigate = useNavigate();
+
+  const token = useSelector((state) => state.auth.token);
+  const currentUser = useSelector((state) => state.user.currentUser);
+  const connectionsList = useSelector((state) => state.user.connections);
+  const connectionsStatus = useSelector(
+    (state) => state.user.connectionsStatus
+  );
+
   const dispatch = useDispatch();
+
   const isUserInFollowingList = (id) => {
     return currentUser.following?.includes(id);
   };
+
   useEffect(() => {
-    (async function () {
-      try {
-        const { data, status } = await axios.get(
-          `${API_URL}${location.pathname}`,
-          {
-            headers: {
-              authorization: token,
-            },
-          }
-        );
+    dispatch(fetchConnections({ pathname: location.pathname, token }));
+    return () => {
+      dispatch(connectionsReset());
+    };
+  }, [dispatch, token, location]);
 
-        if (status === 200) {
-          setList(data.list);
-        }
-      } catch (error) {
-        alert(error);
-      }
-    })();
-  }, [location.pathname, token]);
-  const followUser = async (profileUserId) => {
-    try {
-      const { status } = await axios.post(
-        `${API_URL}/users/follow`,
-        {
-          _id: profileUserId,
-        },
-        {
-          headers: {
-            authorization: token,
-          },
-        }
-      );
-      if (status === 200) {
-        // setList((list) => list.filter((item) => item._id !== profileUserId));
-        dispatch(
-          userFollowed({ currentUserId: currentUser._id, profileUserId })
+  const handleConnectionAction = (userId) => {
+    isUserInFollowingList(userId)
+      ? dispatch(
+          unFollowUser({
+            profileUserId: userId,
+            currentUserId: currentUser._id,
+            token,
+          })
+        )
+      : dispatch(
+          followUser({
+            profileUserId: userId,
+            currentUserId: currentUser._id,
+            token,
+          })
         );
-      }
-    } catch (error) {}
   };
-
-  const unFollowUser = async (profileUserId) => {
-    try {
-      const { status } = await axios.post(
-        "https://dhrutham-connect-backend.janaki23.repl.co/users/unfollow",
-        {
-          _id: profileUserId,
-        },
-        {
-          headers: {
-            authorization: token,
-          },
-        }
-      );
-      if (status === 200) {
-        // setList((list) => list.filter((item) => item._id !== profileUserId));
-        dispatch(
-          userUnFollowed({ currentUserId: currentUser._id, profileUserId })
-        );
-      }
-    } catch (error) {}
-  };
-
   return (
-    <div
-      style={{
-        width: "90%",
-        maxWidth: "30rem",
-        margin: "auto",
-        marginTop: "3rem",
-      }}
-    >
+    <div className="list-align-center margin-top-5">
       <div className="full-width">
         <button
-          style={{ width: "50%" }}
-          className="profile-btn"
+          className="profile-btn half-width"
           onClick={() => navigate(`/users/${currentUser.userName}/followers`)}
         >
           Followers
         </button>
         <button
-          style={{ width: "50%" }}
-          className="profile-btn"
+          className="profile-btn half-width"
           onClick={() => navigate(`/users/${currentUser.userName}/following`)}
         >
           Following
         </button>
       </div>
-
-      <div className="margin-top ">
-        {list.map((item) => {
-          return (
-            <div
-              key={item._id}
-              className="border-all gray-border cursor-pointer"
-              // onClick={() => {
-              //   navigate(`/users/${item.userName}`);
-              // }}
-            >
-              <div className="flex-horizontal margint-top padding-all">
-                <div>
-                  <img
-                    className="round-img img-size-small img-margin"
-                    src={item.photoUrl}
-                    alt="profile-pic"
-                  />
-                </div>
-                <div className="flex-horizontal space-between full-width">
+      {connectionsStatus === "loading" && (
+        <div className="loader center-page-align" />
+      )}
+      {connectionsStatus === "succeeded" && (
+        <div className="margin-top">
+          {connectionsList.map((user) => {
+            return (
+              <div
+                key={user._id}
+                className="border-all gray-border cursor-pointer"
+              >
+                <div className="flex-horizontal margint-top padding-all">
                   <div>
-                    <div className="font-bold-1">
-                      {item.firstName} {item.lastName}{" "}
-                      <span className="text-gray">@{item.userName}</span>
-                    </div>
-                    <div className="font-size-5 ">{item.bio}</div>
+                    <img
+                      className="round-img img-size-small img-margin"
+                      src={user.photoUrl}
+                      alt="profile-pic"
+                    />
                   </div>
-                  <div>
-                    {currentUser.userName !== item.userName && (
-                      <button
-                        className={
-                          isUserInFollowingList(item._id)
-                            ? "float-right profile-btn btn-primary-contained"
-                            : "float-right profile-btn btn-primary-outline"
-                        }
-                        onClick={() => {
-                          isUserInFollowingList(item._id)
-                            ? unFollowUser(item._id)
-                            : followUser(item._id);
-                        }}
-                      >
-                        {isUserInFollowingList(item._id)
-                          ? "Following"
-                          : "Follow"}
-                      </button>
-                    )}
+                  <div className="flex-horizontal space-between full-width">
+                    <div>
+                      <div className="font-bold-1">
+                        {user.firstName} {user.lastName}{" "}
+                        <span className="text-gray">@{user.userName}</span>
+                      </div>
+                      <div className="font-size-5 ">{user.bio}</div>
+                    </div>
+                    <div>
+                      {currentUser.userName !== user.userName && (
+                        <button
+                          className={
+                            isUserInFollowingList(user._id)
+                              ? "float-right profile-btn btn-primary-contained"
+                              : "float-right profile-btn btn-primary-outline"
+                          }
+                          onClick={() => {
+                            handleConnectionAction(user._id);
+                          }}
+                        >
+                          {isUserInFollowingList(user._id)
+                            ? "Following"
+                            : "Follow"}
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

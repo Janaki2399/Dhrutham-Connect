@@ -1,31 +1,34 @@
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { postsReset } from "../features/posts/postsSlice";
-import { authReset } from "../features/auth/authSlice";
-import { usersReset } from "../features/users/userSlice";
-import { notificationsReset } from "../features/notifications/notificationsSlice";
+import { logoutButtonClicked } from "../features/auth/authSlice";
+// import { postsReset } from "../features/posts/postsSlice";
+// import { authReset } from "../features/auth/authSlice";
+// import { usersReset } from "../features/users/userSlice";
+// import { notificationsReset } from "../features/notifications/notificationsSlice";
 import { SearchBar } from "../features/users/SearchBar";
+import logo from "../assets/logo.png";
+import { useState } from "react";
+import { Sidebar } from "./Sidebar";
+
 export const Navbar = () => {
   const token = useSelector((state) => state.auth.token);
   const loggedInUserData = useSelector((state) => state.user.currentUser);
+
   const loggedInUserStatus = useSelector(
     (state) => state.user.currentUserDataStatus
   );
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (token === null) {
-      localStorage?.removeItem("login");
-      navigate("/login");
-    }
-  }, [token, navigate]);
+  // useEffect(() => {
+  //   if (token === null) {
+  //   }
+  // }, [token, navigate]);
   const logout = () => {
-    dispatch(postsReset());
-    dispatch(usersReset());
-    dispatch(notificationsReset());
-    dispatch(authReset());
+    localStorage?.removeItem("login");
+    navigate("/login");
+    dispatch(logoutButtonClicked());
   };
 
   return (
@@ -34,11 +37,16 @@ export const Navbar = () => {
         className="font-size-3 anchor-link text-color-primary cursor-pointer "
         to="/"
       >
-        <div class="font-size-3 text-color-primary">Dhrutham Connect</div>
+        <div class="font-size-3 text-color-primary desktop-logo margin-left">
+          Dhrutham Connect
+        </div>
+        <div className=" align-center nav-item mobile-logo margin-left">
+          <img src={logo} alt="logo" width="40" />
+        </div>
       </Link>
       <SearchBar />
 
-      <div className="nav-list">
+      <div className="nav-list desktop-menu margin-right">
         {!token ? (
           <Link to="/login" className=" nav-item anchor-link margin-right">
             {" "}
@@ -49,7 +57,11 @@ export const Navbar = () => {
             className="nav-item cursor-pointer margin-right"
             onClick={() => logout()}
           >
-            Logout
+            <span
+              className={"material-icons-outlined icon-color-gray icon-size-28"}
+            >
+              logout
+            </span>
           </div>
         )}
         {loggedInUserStatus === "succeeded" && (
@@ -62,7 +74,6 @@ export const Navbar = () => {
               src={loggedInUserData.photoUrl}
               alt="profile-pic"
             />
-            Hi {loggedInUserData.userName}
           </div>
         )}
         <div
@@ -76,6 +87,15 @@ export const Navbar = () => {
           </span>
         </div>
       </div>
+      <div
+        className="mobile-menu margin-right relative-position"
+        onClick={() => setSidebarOpen((prevState) => !prevState)}
+      >
+        <span class="material-icons-outlined icon-size-36 cursor-pointer">
+          menu
+        </span>
+      </div>
+      {isSidebarOpen && <Sidebar logout={logout} />}
     </div>
   );
 };

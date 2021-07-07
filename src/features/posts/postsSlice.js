@@ -1,15 +1,7 @@
-import {
-  createSlice,
-  createAsyncThunk,
-  createEntityAdapter,
-} from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API_URL } from "../../config";
-
-const postsAdapter = createEntityAdapter({
-  selectId: (post) => post._id,
-  sortComparer: (a, b) => b.createdAt.localeCompare(a.createdAt),
-});
+import { logoutButtonClicked } from "../auth/authSlice";
 
 export const fetchFeed = createAsyncThunk("posts/fetchFeed", async (token) => {
   const response = await axios.get(`${API_URL}/posts`, {
@@ -20,6 +12,7 @@ export const fetchFeed = createAsyncThunk("posts/fetchFeed", async (token) => {
 
   return response.data.postList;
 });
+
 export const fetchPostsOfUser = createAsyncThunk(
   "posts/fetchPostsOfUser",
   async ({ userName, token }) => {
@@ -31,15 +24,16 @@ export const fetchPostsOfUser = createAsyncThunk(
     return response.data.postList;
   }
 );
+
 export const addPost = createAsyncThunk(
   "posts/addPost",
   async (data, { rejectWithValue }) => {
-    // console.log(text);
     try {
       const response = await axios.post(
         `${API_URL}/posts`,
         {
           text: data.text,
+          asset: data.asset,
         },
         {
           headers: {
@@ -81,19 +75,18 @@ export const unlikePost = createAsyncThunk("posts/unlikePost", async (data) => {
 
 export const postsSlice = createSlice({
   name: "posts",
-  initialState: postsAdapter.getInitialState({
+  initialState: {
+    feed: [],
+    userPosts: [],
     feedStatus: "idle",
     userProfilePostsStatus: "idle",
     error: null,
     addStatus: "idle",
-  }),
+  },
   reducers: {
-    postsReset: (state, action) => {
-      postsAdapter.removeAll(state);
-      state.feedStatus = "idle";
+    userPostsReset: (state, dispatch) => {
+      state.userPosts = [];
       state.userProfilePostsStatus = "idle";
-      state.addStatus = "idle";
-      state.error = "null";
     },
   },
   extraReducers: {
@@ -102,9 +95,7 @@ export const postsSlice = createSlice({
     },
     [fetchFeed.fulfilled]: (state, action) => {
       state.feedStatus = "succeeded";
-      postsAdapter.removeAll(state);
-      // Add any fetched posts to the array
-      postsAdapter.upsertMany(state, action.payload);
+      state.feed = action.payload;
     },
     [fetchFeed.rejected]: (state, action) => {
       state.feedStatus = "failed";
@@ -115,9 +106,7 @@ export const postsSlice = createSlice({
     },
     [fetchPostsOfUser.fulfilled]: (state, action) => {
       state.userProfilePostsStatus = "succeeded";
-      // Add any fetched posts to the array
-      postsAdapter.removeAll(state);
-      postsAdapter.upsertMany(state, action.payload);
+      state.userPosts = action.payload;
     },
     [fetchPostsOfUser.rejected]: (state, action) => {
       state.userProfilePostsStatus = "failed";
@@ -128,32 +117,55 @@ export const postsSlice = createSlice({
     },
     [addPost.fulfilled]: (state, action) => {
       state.addStatus = "succeeded";
-      postsAdapter.addOne(state, action.payload.post);
-      // Add any fetched posts to the array
-      // postsAdapter.upsertMany(state, action.payload);
+      state.feed.push(action.payload.post);
     },
     [addPost.rejected]: (state, action) => {
       state.addStatus = "failed";
       state.error = action.payload.message;
     },
-
     [likePost.fulfilled]: (state, action) => {
-      let existingPost = state.entities[action.payload.postId];
-      existingPost.likes.push(action.payload.userId);
-    },
-    [unlikePost.fulfilled]: (state, action) => {
-      let existingPost = state.entities[action.payload.postId];
-      const currentUserIndex = existingPost.likes.indexOf(
-        action.payload.userId
+      state.feed = state.feed.map((post) =>
+        post._id === action.payload.postId
+          ? { ...post, likes: post.likes.concat(action.payload.userId) }
+          : { ...post }
       );
-      existingPost.likes.splice(currentUserIndex, 1);
+      state.userPosts = state.userPosts.map((post) =>
+        post._id === action.payload.postId
+          ? { ...post, likes: post.likes.concat(action.payload.userId) }
+          : { ...post }
+      );
+    },
+
+    [unlikePost.fulfilled]: (state, action) => {
+      state.feed = state.feed.map((post) =>
+        post._id === action.payload.postId
+          ? {
+              ...post,
+              likes: post.likes.filter(
+                (userId) => userId !== action.payload.userId
+              ),
+            }
+          : { ...post }
+      );
+      state.userPosts = state.userPosts.map((post) =>
+        post._id === action.payload.postId
+          ? {
+              ...post,
+              likes: post.likes.filter(
+                (userId) => userId !== action.payload.userId
+              ),
+            }
+          : { ...post }
+      );
+    },
+    [logoutButtonClicked]: (state, action) => {
+      state.feed = [];
+      state.feedStatus = "idle";
+      state.userProfilePostsStatus = "idle";
+      state.addStatus = "idle";
+      state.error = "null";
     },
   },
 });
-export const { postsReset } = postsSlice.actions;
+export const { userPostsReset } = postsSlice.actions;
 export default postsSlice.reducer;
-export const {
-  selectAll: selectAllPosts,
-  selectById: selectPostById,
-  selectIds: selectPostIds,
-} = postsAdapter.getSelectors((state) => state.posts);

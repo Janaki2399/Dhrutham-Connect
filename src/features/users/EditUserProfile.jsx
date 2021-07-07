@@ -1,21 +1,42 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { updateUserProfile } from "./userSlice";
+
 export const EditUserProfile = () => {
   const token = useSelector((state) => state.auth.token);
   const profile = useSelector((state) => state.user.userProfile);
   const [firstName, setFirstName] = useState(profile.firstName);
   const [lastName, setLastName] = useState(profile.lastName);
+  const [photoUrl, setPhotoUrl] = useState(profile.photoUrl);
   const [bio, setBio] = useState(profile.bio);
   const [location, setLocation] = useState(profile.location);
   const [websiteLink, setWebsiteLink] = useState(profile.websiteLink);
   const dispatch = useDispatch();
+
   const saveDetails = () => {
     dispatch(
       updateUserProfile({
-        details: { firstName, lastName, bio, location, websiteLink },
+        details: { firstName, lastName, photoUrl, bio, location, websiteLink },
         token,
       })
+    );
+  };
+
+  const uploadImage = () => {
+    window.cloudinary.openUploadWidget(
+      {
+        cloudName: process.env.CLOUD_NAME,
+        uploadPreset: process.env.UPLOAD_PRESET,
+        cropping: true,
+        multiple: false,
+      },
+      (error, result) => {
+        if (!error && result && result.event === "success") {
+          const url = `https://res.cloudinary.com/${process.env.CLOUD_NAME}/image/upload/w_100,h_100,c_thumb,r_max/${result.info.path}`;
+
+          setPhotoUrl(url);
+        }
+      }
     );
   };
 
@@ -26,11 +47,24 @@ export const EditUserProfile = () => {
           e.preventDefault();
           saveDetails();
         }}
-        className="center-align-ver-hor padding-all"
-        style={{ width: "100%" }}
+        className="center-align-ver-hor padding-all full-width"
       >
         <div className="font-size-3 margin-bottom text-center">
           Edit Profile
+        </div>
+
+        <div className="img-margin margin-auto img-size-large relative-position">
+          <img
+            className="round-img img-size-large "
+            src={photoUrl}
+            alt="profile-pic"
+          ></img>
+          <button
+            className="absolute-position icon-btn edit-profile-icon cursor-pointer"
+            onClick={uploadImage}
+          >
+            <span class="material-icons-outlined text-white">add_a_photo</span>
+          </button>
         </div>
         <div class="flex-column">
           <label htmlFor="First Name" className="font-size-6 font-bold-1">
@@ -67,7 +101,6 @@ export const EditUserProfile = () => {
             maxLength="160"
             spellCheck="true"
             className="text-area"
-            // className="text-input"
             value={bio}
             onChange={(e) => setBio(e.target.value)}
           />

@@ -14,6 +14,7 @@
   margin-right: 2rem;
   height: 3rem;
 }
+
 .text-area:focus {
   outline-width: thin;
   outline-color: #60a5fa;
@@ -21,11 +22,12 @@
 
 .search-input {
   height: 1.3rem;
-  width: 14rem;
+  width: 12rem;
   outline: none;
   font-size: 1rem;
   border: transparent;
 }
+
 .input-wrapper {
   display: flex;
   position: relative;
@@ -41,10 +43,10 @@
 .autocomplete {
   position: absolute;
   width: 100%;
+  height: 15rem;
+  overflow-y: auto;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   z-index: 1;
-  /* padding: 1rem; */
-  /* border: 1px solid gray; */
   background-color: white;
 }
 
@@ -67,9 +69,6 @@
   border: none;
   border-bottom: 1px gainsboro solid;
   outline: none;
-  /* font-family: ;
-  max
-} */
 }
 
 .float-right {
@@ -80,8 +79,6 @@
   height: 2rem;
   padding: 0.4rem 0.5rem;
   border: 1px var(--gray-color) solid;
-  /* border: none;
-  outline: none; */
   cursor: pointer;
   font-size: 0.9rem;
 }
@@ -92,4 +89,76 @@
 
 .autocomplete-item:hover {
   background-color: #e5e7eb;
+}
+
+.edit-profile-icon {
+  top: 40%;
+  bottom: 60%;
+  right: 60%;
+  left: 40%;
+}
+
+.list-align-center {
+  width: 90%;
+  max-width: 35rem;
+  margin: auto;
+}
+.margin-top-5 {
+  margin-top: 5rem;
+}
+
+.margin-top-3 {
+  margin-top: 3rem;
+}
+.auth-form-size {
+  width: 90%;
+  max-width: 20rem;
+}
+
+.modal-size {
+  max-width: 30rem;
+  width: 100%;
+}
+/** Navbar **/
+
+.desktop-menu {
+  display: none;
+}
+
+.desktop-logo {
+  display: none;
+}
+
+.profile-mobile-view {
+  flex-direction: column;
+}
+
+.sidebar {
+  position: absolute;
+  width: 8rem;
+  bottom: -7rem;
+  right: 0;
+  background-color: var(--white-color);
+}
+
+@media (min-width: 576px) {
+  .desktop-menu {
+    display: flex;
+  }
+  .mobile-menu {
+    display: none;
+  }
+  .desktop-logo {
+    display: block;
+  }
+  .mobile-logo {
+    display: none;
+  }
+  .profile-mobile-view {
+    display: flex;
+    flex-direction: row;
+  }
+  .sidebar {
+    display: none;
+  }
 }

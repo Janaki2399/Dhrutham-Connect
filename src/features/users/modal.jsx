@@ -1,10 +1,7 @@
 export const Modal = ({ children, setModal }) => {
   return (
-    <div className="modal-background">
-      <div
-        className="modal-content "
-        style={{ maxWidth: "30rem", width: "100%" }}
-      >
+    <div className="modal-background ">
+      <div className="modal-content margin-top modal-size">
         <div className="flex-horizontal center-align space-between">
           <div>
             <button onClick={() => setModal(false)} className=" btn-box ">

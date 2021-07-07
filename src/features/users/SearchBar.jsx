@@ -1,10 +1,10 @@
 import { useDispatch } from "react-redux";
-import { fetchUserListOnSearch } from "./userSlice";
 import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import axios from "axios";
 import { UsersListDropDown } from "./UsersListDropDown";
 import { API_URL } from "../../config";
+import { API_STATUS } from "../../constants";
 
 const APIStatus = {
   IDLE: "idle",
@@ -19,8 +19,8 @@ export const SearchBar = () => {
   const [status, setStatus] = useState(APIStatus.IDLE);
   const [searchValue, setSearchValue] = useState("");
   const [isDropDownOpen, setDropDownOpen] = useState(false);
+  const token = useSelector((state) => state.auth.token);
 
-  useEffect(() => {});
   function debounce(func, delay) {
     let timer;
     return function () {
@@ -42,7 +42,7 @@ export const SearchBar = () => {
           },
         }
       );
-      //   console.log(response);
+
       if (status === 200) {
         setStatus(APIStatus.ERROR);
         setSearchResults(data.result);
@@ -52,13 +52,26 @@ export const SearchBar = () => {
       console.log(error);
     }
   }
-  const token = useSelector((state) => state.auth.token);
 
   const handleSearch = (e) => {
-    setDropDownOpen(true);
+    setSearchValue(e.target.value);
     fetchUserListOnSearch({ searchQuery: e.target.value, token });
   };
-  let betterFunction = debounce(handleSearch, 300);
+
+  const openDropDown = () => {
+    setDropDownOpen(true);
+  };
+
+  const closeDropDown = () => {
+    setDropDownOpen(false);
+    setSearchValue("");
+    setStatus(API_STATUS.IDLE);
+  };
+  const debouncedFunction = debounce(handleSearch, 300);
+
+  // useEffect(() => {
+  //   debouncedFunction();
+  // }, [searchValue]);
 
   return (
     <div className="relative-position">
@@ -66,7 +79,7 @@ export const SearchBar = () => {
         <div className="icon-btn">
           <span
             className={
-              "material-icons-outlined icon-color-gray icon-size-24 cursor-pointer"
+              "material-icons-outlined icon-color-gray icon-size-18 cursor-pointer"
             }
           >
             search
@@ -75,10 +88,11 @@ export const SearchBar = () => {
         <div>
           <input
             type="text"
-            className="search-input font-size-4"
+            className="search-input font-size-4 "
             // value={searchValue}
+            onFocus={openDropDown}
             placeholder="Search users"
-            onKeyDown={betterFunction}
+            onChange={debouncedFunction}
           />
         </div>
 
@@ -88,10 +102,7 @@ export const SearchBar = () => {
               className={
                 "material-icons-outlined icon-color-gray icon-size-24 cursor-pointer"
               }
-              onClick={() => {
-                setDropDownOpen(false);
-                setSearchValue("");
-              }}
+              onClick={closeDropDown}
             >
               close
             </span>
@@ -99,7 +110,11 @@ export const SearchBar = () => {
         </div>
       </div>
       {isDropDownOpen && (
-        <UsersListDropDown searchResults={searchResults} status={status} />
+        <UsersListDropDown
+          searchResults={searchResults}
+          status={status}
+          closeDropDown={closeDropDown}
+        />
       )}
     </div>
   );

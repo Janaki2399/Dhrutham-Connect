@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { logoutButtonClicked } from "../auth/authSlice";
 import { API_URL } from "../../config";
+
 export const fetchUserProfile = createAsyncThunk(
   "users/userProfile",
   async ({ userName, token }) => {
@@ -9,9 +11,11 @@ export const fetchUserProfile = createAsyncThunk(
         authorization: token,
       },
     });
+
     return response.data.userDetails;
   }
 );
+
 export const fetchCurrentUserData = createAsyncThunk(
   "users/currentUser",
   async (token) => {
@@ -21,6 +25,18 @@ export const fetchCurrentUserData = createAsyncThunk(
       },
     });
     return response.data;
+  }
+);
+
+export const fetchConnections = createAsyncThunk(
+  "users/connections",
+  async ({ pathname, token }) => {
+    const { data, status } = await axios.get(`${API_URL}${pathname}`, {
+      headers: {
+        authorization: token,
+      },
+    });
+    return data.list;
   }
 );
 
@@ -40,10 +56,10 @@ export const updateUserProfile = createAsyncThunk(
     return response.data.updatedProfile;
   }
 );
+
 export const fetchUserListOnSearch = createAsyncThunk(
   "users/searchUser",
   async ({ searchQuery, token }) => {
-    // console.log(searchQuery);
     const response = await axios.get(
       `${API_URL}/users/search/query?name=${searchQuery}`,
       {
@@ -56,42 +72,77 @@ export const fetchUserListOnSearch = createAsyncThunk(
     return response.data.updatedProfile;
   }
 );
+
+export const followUser = createAsyncThunk(
+  "users/followUsers",
+  async (details) => {
+    await axios.post(
+      `${API_URL}/users/follow`,
+      {
+        _id: details.profileUserId,
+      },
+      {
+        headers: {
+          authorization: details.token,
+        },
+      }
+    );
+
+    return details;
+  }
+);
+
+export const unFollowUser = createAsyncThunk(
+  "users/unfollowUser",
+  async (details) => {
+    await axios.post(
+      `${API_URL}/users/unfollow`,
+      {
+        _id: details.profileUserId,
+      },
+      {
+        headers: {
+          authorization: details.token,
+        },
+      }
+    );
+
+    return details;
+  }
+);
 export const userSlice = createSlice({
   name: "user",
   initialState: {
     currentUser: {},
     userProfile: {},
     userList: {},
+    connections: [],
     userProfileStatus: "idle",
     currentUserDataStatus: "idle",
     profileUpdateStatus: "idle",
+    followStatus: "idle",
+    unFollowStatus: "idle",
+    connectionsStatus: "idle",
     error: null,
   },
   reducers: {
-    userFollowed: (state, action) => {
-      state.currentUser.following = state.currentUser.following.concat(
-        action.payload.profileUserId
-      );
-    },
-    userUnFollowed: (state, action) => {
-      state.currentUser.following = state.currentUser.following.filter(
-        (userId) => userId !== action.payload.profileUserId
-      );
-
-      // state.currentUser.following.splice(profileUserIndex, 1);
-      // // console.log();
-      // const currentUserIndex = state.userProfile.followers.indexOf(
-      //   action.payload.currentUserId
-      // );
-      // state.userProfile.followers.splice(currentUserIndex, 1);
-    },
-    usersReset: (state, action) => {
-      state.currentUser = {};
+    // userFollowed: (state, action) => {
+    //   state.currentUser.following = state.currentUser.following.concat(
+    //     action.payload.profileUserId
+    //   );
+    // },
+    // userUnFollowed: (state, action) => {
+    //   state.currentUser.following = state.currentUser.following.filter(
+    //     (userId) => userId !== action.payload.profileUserId
+    //   );
+    // },
+    userProfileReset: (state, action) => {
       state.userProfile = {};
-      state.userList = {};
       state.userProfileStatus = "idle";
-      state.currentUserDataStatus = "idle";
-      state.error = null;
+    },
+    connectionsReset: (state, action) => {
+      state.connections = [];
+      state.connectionsStatus = "idle";
     },
   },
   extraReducers: {
@@ -117,7 +168,17 @@ export const userSlice = createSlice({
       state.userProfileStatus = "failed";
       state.error = action.error.message;
     },
-
+    [fetchConnections.pending]: (state, action) => {
+      state.connectionsStatus = "loading";
+    },
+    [fetchConnections.fulfilled]: (state, action) => {
+      state.connections = action.payload;
+      state.connectionsStatus = "succeeded";
+    },
+    [fetchConnections.rejected]: (state, action) => {
+      state.connectionsStatus = "failed";
+      state.error = action.error.message;
+    },
     [updateUserProfile.pending]: (state, action) => {
       state.profileUpdateStatus = "loading";
     },
@@ -126,15 +187,59 @@ export const userSlice = createSlice({
       state.profileUpdateStatus = "succeeded";
     },
     [updateUserProfile.rejected]: (state, action) => {
-      state.profileUpdateStatus = "rejected";
+      state.profileUpdateStatus = "failed";
     },
-    // [logoutButtonClicked]: (state, action) => {
-    //   state.userProfile = {};
-    //   state.userList = {};
-    //   state.userProfileStatus = "idle";
-    //   state.error = null;
-    // },
+    [followUser.pending]: (state, action) => {
+      state.followStatus = "loading";
+    },
+    [followUser.fulfilled]: (state, action) => {
+      state.currentUser.following = state.currentUser.following.concat(
+        action.payload.profileUserId
+      );
+      if (state.userProfile.followers) {
+        state.userProfile.followers = state.userProfile.followers.concat(
+          action.payload.currentUserId
+        );
+      }
+      state.followStatus = "succeeded";
+    },
+    [followUser.rejected]: (state, action) => {
+      state.followStatus = "failed";
+    },
+    [unFollowUser.pending]: (state, action) => {
+      state.unfollowStatus = "loading";
+    },
+    [unFollowUser.fulfilled]: (state, action) => {
+      state.currentUser.following = state.currentUser.following.filter(
+        (userId) => userId !== action.payload.profileUserId
+      );
+      if (state.userProfile.followers) {
+        state.userProfile.followers = state.userProfile.followers.filter(
+          (userId) => userId !== action.payload.currentUserId
+        );
+      }
+      state.unfollowStatus = "succeeded";
+    },
+    [unFollowUser.rejected]: (state, action) => {
+      state.unfollowStatus = "failed";
+    },
+    [logoutButtonClicked]: (state, action) => {
+      state.currentUser = {};
+      state.userProfile = {};
+      state.userList = {};
+      state.followStatus = "idle";
+      state.unfollowStatus = "idle";
+      state.userProfileStatus = "idle";
+      state.currentUserDataStatus = "idle";
+      state.profileUpdateStatus = "idle";
+      state.error = null;
+    },
   },
 });
-export const { userFollowed, userUnFollowed, usersReset } = userSlice.actions;
+export const {
+  userFollowed,
+  userUnFollowed,
+  userProfileReset,
+  connectionsReset,
+} = userSlice.actions;
 export default userSlice.reducer;

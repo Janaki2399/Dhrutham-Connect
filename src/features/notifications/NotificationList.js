@@ -22,17 +22,10 @@ export const NotificationList = () => {
     return <div className="loader center-page-align" />;
   }
   return (
-    <div
-      style={{
-        width: "90%",
-        maxWidth: "35rem",
-        margin: "auto",
-        marginTop: "3rem",
-      }}
-    >
+    <div className="list-align-center margin-top-5">
       <div
-        className="margin-bottom font-bold-1 font-size-4"
-        style={{ margin: "auto", marginBottom: "3rem" }}
+        className="margin-bottom font-bold-1 font-size-4 margin-auto"
+        style={{ marginBottom: "3rem" }}
       >
         Notifications
       </div>
@@ -57,12 +50,9 @@ export const NotificationList = () => {
             //     {notification.postId && <div>{notification.postId.text}</div>}
             //   </div>
             // </div>
-            <div class="center-div">
-              <div
-                class="stacked-list-group"
-                // style={{ width: "23rem", maxWidth: "90%" }}
-              >
-                <div class="stacked-item">
+            <div className="center-div">
+              <div className="stacked-list-group">
+                <div className="stacked-item">
                   {notification.action === "Liked" ? (
                     <span
                       className={
@@ -72,24 +62,24 @@ export const NotificationList = () => {
                       favorite
                     </span>
                   ) : (
-                    <div class="img-margin">
+                    <div className="img-margin">
                       <img
-                        class="round-img img-size-small"
+                        className="round-img img-size-small"
                         src={notification.sender.photoUrl} //change it
                         alt="profile-pic"
                       />
                     </div>
                   )}
 
-                  <div class="font-size-5">
-                    <div class="img-margin">
+                  <div className="font-size-5">
+                    <div className="img-margin">
                       <img
-                        class="round-img img-size-xs"
+                        className="round-img img-size-xs"
                         src={notification.sender.photoUrl}
                         alt="profile-pic"
                       />
                     </div>
-                    <span class="font-bold-1">
+                    <span className="font-bold-1">
                       {" "}
                       {notification.sender.firstName}{" "}
                       {notification.sender.lastName}
