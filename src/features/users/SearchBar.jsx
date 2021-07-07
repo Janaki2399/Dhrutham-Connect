@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { useEffect, useState, useMemo, useCallback } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { UsersListDropDown } from "./UsersListDropDown";
 import { API_URL } from "../../constants";
@@ -14,7 +14,7 @@ const APIStatus = {
 };
 
 export const SearchBar = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const [searchResults, setSearchResults] = useState([]);
   const [status, setStatus] = useState(APIStatus.IDLE);
   const [searchValue, setSearchValue] = useState("");

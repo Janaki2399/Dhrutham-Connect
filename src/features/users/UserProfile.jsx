@@ -7,8 +7,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { followUser, unFollowUser } from "./userSlice";
 import { fetchPostsOfUser } from "../posts/postsSlice";
 import { PostsList } from "../posts/PostsList";
-import { Modal } from "./Modal";
-import { EditUserProfile } from "./EditUserProfile";
+// import { Modal } from "./Modal";
+// import { EditUserProfile } from "./EditUserProfile";
 
 export const UserProfile = () => {
   const status = useSelector((state) => state.user.userProfileStatus);
@@ -68,11 +68,11 @@ export const UserProfile = () => {
     <div>
       {
         <div className="list-align-center ">
-          {modal && (
+          {/* {modal && (
             <Modal setModal={setModal}>
               <EditUserProfile />
             </Modal>
-          )}
+          )} */}
           <div className="flex-horizontal margin-top-3 profile-mobile-view">
             <div className="img-margin margin-right margin-top img-size-large">
               <img
