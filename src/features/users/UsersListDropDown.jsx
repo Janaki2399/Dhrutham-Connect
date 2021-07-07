@@ -30,29 +30,30 @@ export const UsersListDropDown = ({ searchResults, status, closeDropDown }) => {
   return (
     <div className="autocomplete">
       {searchResults.length > 0 &&
-        searchResults.map((item) => {
+        searchResults.map((user) => {
           return (
             <div
+              key={user._id}
               className="border-bottom gray-border autocomplete-item cursor-pointer"
               onClick={() => {
                 closeDropDown();
-                navigate(`/users/${item.userName}`);
+                navigate(`/users/${user.userName}`);
               }}
             >
               <div className="flex-horizontal margint-top padding-all">
                 <div>
                   <img
                     className="round-img img-size-xs img-margin"
-                    src={item.photoUrl}
+                    src={user.photoUrl}
                     alt="profile-pic"
                   />
                 </div>
 
                 <div>
                   <div className="font-bold-1">
-                    {item.firstName} {item.lastName}
+                    {user.firstName} {user.lastName}
                   </div>
-                  <div className="font-size-5 ">@{item.userName}</div>
+                  <div className="font-size-5 ">@{user.userName}</div>
                 </div>
               </div>
             </div>

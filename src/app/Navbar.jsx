@@ -1,10 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { logoutButtonClicked } from "../features/auth/authSlice";
-// import { postsReset } from "../features/posts/postsSlice";
-// import { authReset } from "../features/auth/authSlice";
-// import { usersReset } from "../features/users/userSlice";
-// import { notificationsReset } from "../features/notifications/notificationsSlice";
 import { SearchBar } from "../features/users/SearchBar";
 import logo from "../assets/logo.png";
 import { useState } from "react";
@@ -91,7 +87,7 @@ export const Navbar = () => {
         className="mobile-menu margin-right relative-position"
         onClick={() => setSidebarOpen((prevState) => !prevState)}
       >
-        <span class="material-icons-outlined icon-size-36 cursor-pointer">
+        <span className="material-icons-outlined icon-size-36 cursor-pointer">
           menu
         </span>
       </div>

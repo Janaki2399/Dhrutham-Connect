@@ -50,7 +50,7 @@ export const NotificationList = () => {
             //     {notification.postId && <div>{notification.postId.text}</div>}
             //   </div>
             // </div>
-            <div className="center-div">
+            <div className="center-div" key={notification._id}>
               <div className="stacked-list-group">
                 <div className="stacked-item">
                   {notification.action === "Liked" ? (
