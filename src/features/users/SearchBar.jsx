@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useEffect, useState, useMemo, useCallback } from "react";
 import axios from "axios";
 import { UsersListDropDown } from "./UsersListDropDown";
-import { API_URL } from "../../config";
+import { API_URL } from "../../constants";
 import { API_STATUS } from "../../constants";
 
 const APIStatus = {

@@ -5,7 +5,7 @@ import {
 } from "@reduxjs/toolkit";
 import axios from "axios";
 import { logoutButtonClicked } from "../auth/authSlice";
-import { API_URL } from "../../config";
+import { API_URL } from "../../constants";
 
 const notificationsAdapter = createEntityAdapter({
   selectId: (notification) => notification._id,

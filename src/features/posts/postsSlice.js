@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { API_URL } from "../../config";
+import { API_URL } from "../../constants";
 import { logoutButtonClicked } from "../auth/authSlice";
 
 export const fetchFeed = createAsyncThunk("posts/fetchFeed", async (token) => {
