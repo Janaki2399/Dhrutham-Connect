@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { updateUserProfile } from "./userSlice";
+import { CLOUDINARY_VIDEO_TRANSFORMATION_URL } from "../../constants";
 
 export const EditUserProfile = () => {
   const token = useSelector((state) => state.auth.token);
@@ -32,7 +33,7 @@ export const EditUserProfile = () => {
       },
       (error, result) => {
         if (!error && result && result.event === "success") {
-          const url = `https://res.cloudinary.com/${process.env.CLOUD_NAME}/image/upload/w_100,h_100,c_thumb,r_max/${result.info.path}`;
+          const url = `${CLOUDINARY_VIDEO_TRANSFORMATION_URL}/${result.info.path}`;
 
           setPhotoUrl(url);
         }

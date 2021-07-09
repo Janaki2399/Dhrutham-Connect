@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import axios from "axios";
 import { UsersListDropDown } from "./UsersListDropDown";
 import { API_URL } from "../../constants";
@@ -20,16 +20,16 @@ export const SearchBar = () => {
   const [searchValue, setSearchValue] = useState("");
   const [isDropDownOpen, setDropDownOpen] = useState(false);
   const token = useSelector((state) => state.auth.token);
-
-  function debounce(func, delay) {
+  const debounce = useCallback(function (func, delay) {
     let timer;
-    return function () {
-      const context = this;
-      const args = arguments;
+    return function (e) {
+      // const context = this;
+      // const args = arguments;
       clearTimeout(timer);
-      timer = setTimeout(() => func.apply(context, args), delay);
+      // timer = setTimeout(() => func.apply(context, args), delay);
+      timer = setTimeout(() => func(e), delay);
     };
-  }
+  }, []);
 
   async function fetchUserListOnSearch({ searchQuery, token }) {
     try {
@@ -54,7 +54,6 @@ export const SearchBar = () => {
   }
 
   const handleSearch = (e) => {
-    setSearchValue(e.target.value);
     fetchUserListOnSearch({ searchQuery: e.target.value, token });
   };
 
@@ -67,11 +66,7 @@ export const SearchBar = () => {
     setSearchValue("");
     setStatus(API_STATUS.IDLE);
   };
-  const debouncedFunction = debounce(handleSearch, 300);
-
-  // useEffect(() => {
-  //   debouncedFunction();
-  // }, [searchValue]);
+  const debouncedFunction = useCallback(debounce(handleSearch, 300), []);
 
   return (
     <div className="relative-position">
@@ -89,10 +84,13 @@ export const SearchBar = () => {
           <input
             type="text"
             className="search-input font-size-4 "
-            // value={searchValue}
+            value={searchValue}
             onFocus={openDropDown}
             placeholder="Search users"
-            onChange={debouncedFunction}
+            onChange={(e) => {
+              setSearchValue(e.target.value);
+              debouncedFunction(e);
+            }}
           />
         </div>
 
