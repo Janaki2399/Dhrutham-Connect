@@ -18,6 +18,7 @@ export const SearchBar = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [status, setStatus] = useState(APIStatus.IDLE);
   const [searchValue, setSearchValue] = useState("");
+  console.log(searchValue);
   const [isDropDownOpen, setDropDownOpen] = useState(false);
   const token = useSelector((state) => state.auth.token);
   const debounce = useCallback(function (func, delay) {
