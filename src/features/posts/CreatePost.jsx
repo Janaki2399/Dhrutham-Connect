@@ -36,13 +36,16 @@ export const CreatePost = () => {
   const uploadImage = () => {
     window.cloudinary.openUploadWidget(
       {
-        cloudName: process.env.CLOUD_NAME,
-        uploadPreset: process.env.UPLOAD_PRESET,
+        cloudName: process.env.REACT_APP_CLOUD_NAME,
+        uploadPreset: process.env.REACT_APP_UPLOAD_PRESET,
         cropping: true,
         multiple: false,
         maxVideoFileSize: 5000000,
       },
       (error, result) => {
+        if (error) {
+          console.log(error);
+        }
         if (!error && result && result.event === "success") {
           setUploadedAsset(result.info);
         }

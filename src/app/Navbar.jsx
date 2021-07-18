@@ -32,7 +32,7 @@ export const Navbar = () => {
         className="font-size-3 anchor-link text-color-primary cursor-pointer "
         to="/"
       >
-        <div class="font-size-3 text-color-primary desktop-logo margin-left">
+        <div className="font-size-3 text-color-primary desktop-logo margin-left">
           Dhrutham Connect
         </div>
         <div className=" align-center nav-item mobile-logo margin-left">

@@ -30,8 +30,8 @@ export const EditUserProfile = () => {
   const uploadImage = () => {
     window.cloudinary.openUploadWidget(
       {
-        cloudName: process.env.CLOUD_NAME,
-        uploadPreset: process.env.UPLOAD_PRESET,
+        cloudName: process.env.REACT_APP_CLOUD_NAME,
+        uploadPreset: process.env.REACT_APP_UPLOAD_PRESET,
         cropping: true,
         multiple: false,
       },
@@ -65,6 +65,7 @@ export const EditUserProfile = () => {
             alt="profile-pic"
           ></img>
           <button
+            type="button"
             className="absolute-position icon-btn edit-profile-icon cursor-pointer"
             onClick={uploadImage}
           >
