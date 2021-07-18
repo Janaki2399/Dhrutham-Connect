@@ -9,6 +9,7 @@ import { fetchPostsOfUser } from "../posts/postsSlice";
 import { PostsList } from "../posts/PostsList";
 import { EditProfileModal } from "./EditProfileModal";
 import { EditUserProfile } from "./EditUserProfile";
+import { API_STATUS } from "../../constants";
 
 export const UserProfile = () => {
   const status = useSelector((state) => state.user.userProfileStatus);
@@ -58,7 +59,7 @@ export const UserProfile = () => {
         );
   };
 
-  if (status === "loading") {
+  if (status === API_STATUS.LOADING) {
     return <div className="loader center-page-align" />;
   }
   const createdAt = profile.createdAt;

@@ -1,16 +1,17 @@
 import { useNavigate } from "react-router";
+import { API_STATUS } from "../../constants";
 
 export const UsersListDropDown = ({ searchResults, status, closeDropDown }) => {
   const navigate = useNavigate();
 
-  if (status === "loading") {
+  if (status === API_STATUS.LOADING) {
     return (
       <div className="autocomplete flex-column">
         <div className="loader margin-auto" />
       </div>
     );
   }
-  if (status === "idle") {
+  if (status === API_STATUS.IDLE) {
     return (
       <div className="autocomplete flex-column">
         <div className="margin-auto font-size-4 text-gray">

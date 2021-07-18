@@ -126,16 +126,6 @@ export const userSlice = createSlice({
     error: null,
   },
   reducers: {
-    // userFollowed: (state, action) => {
-    //   state.currentUser.following = state.currentUser.following.concat(
-    //     action.payload.profileUserId
-    //   );
-    // },
-    // userUnFollowed: (state, action) => {
-    //   state.currentUser.following = state.currentUser.following.filter(
-    //     (userId) => userId !== action.payload.profileUserId
-    //   );
-    // },
     userProfileReset: (state, action) => {
       state.userProfile = {};
       state.userProfileStatus = "idle";

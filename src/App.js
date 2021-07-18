@@ -10,8 +10,6 @@ import { NotificationList } from "./features/notifications/NotificationList";
 import { Connections } from "./features/users/Connections";
 import { fetchCurrentUserData } from "./features/users/userSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
-import { Sidebar } from "./app/Sidebar";
 import { Feed } from "./features/posts/Feed";
 
 function App() {

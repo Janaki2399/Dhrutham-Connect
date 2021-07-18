@@ -1,11 +1,15 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { updateUserProfile } from "./userSlice";
-import { CLOUDINARY_VIDEO_TRANSFORMATION_URL } from "../../constants";
+import {
+  API_STATUS,
+  CLOUDINARY_VIDEO_TRANSFORMATION_URL,
+} from "../../constants";
 
 export const EditUserProfile = () => {
   const token = useSelector((state) => state.auth.token);
   const profile = useSelector((state) => state.user.userProfile);
+  const updateStatus = useSelector((state) => state.user.profileUpdateStatus);
   const [firstName, setFirstName] = useState(profile.firstName);
   const [lastName, setLastName] = useState(profile.lastName);
   const [photoUrl, setPhotoUrl] = useState(profile.photoUrl);
@@ -64,7 +68,7 @@ export const EditUserProfile = () => {
             className="absolute-position icon-btn edit-profile-icon cursor-pointer"
             onClick={uploadImage}
           >
-            <span class="material-icons-outlined text-white">add_a_photo</span>
+            <span class="material-icons-outlined icon-gray">add_a_photo</span>
           </button>
         </div>
         <div class="flex-column">
@@ -128,14 +132,18 @@ export const EditUserProfile = () => {
             onChange={(e) => setWebsiteLink(e.target.value)}
           />
         </div>
-        <div>
-          <button
-            type="submit"
-            className="btn btn-primary-contained font-size-5"
-          >
-            SAVE
-          </button>
-        </div>
+        {updateStatus === API_STATUS.LOADING ? (
+          <div className="loader" />
+        ) : (
+          <div>
+            <button
+              type="submit"
+              className="btn btn-primary-contained font-size-5 margin-top"
+            >
+              SAVE
+            </button>
+          </div>
+        )}
       </form>
     </div>
   );

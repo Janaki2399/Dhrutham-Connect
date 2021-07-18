@@ -17,10 +17,9 @@ export const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   if (token === null) {
-  //   }
-  // }, [token, navigate]);
+  const closeSideBar = () => {
+    setSidebarOpen(false);
+  };
   const logout = () => {
     localStorage?.removeItem("login");
     navigate("/login");
@@ -91,7 +90,7 @@ export const Navbar = () => {
           menu
         </span>
       </div>
-      {isSidebarOpen && <Sidebar logout={logout} />}
+      {isSidebarOpen && <Sidebar logout={logout} closeSideBar={closeSideBar} />}
     </div>
   );
 };

@@ -14,21 +14,21 @@ const APIStatus = {
 };
 
 export const SearchBar = () => {
-  // const dispatch = useDispatch();
   const [searchResults, setSearchResults] = useState([]);
   const [status, setStatus] = useState(APIStatus.IDLE);
   const [searchValue, setSearchValue] = useState("");
-  console.log(searchValue);
+
   const [isDropDownOpen, setDropDownOpen] = useState(false);
   const token = useSelector((state) => state.auth.token);
+
   const debounce = useCallback(function (func, delay) {
     let timer;
-    return function (e) {
-      // const context = this;
-      // const args = arguments;
+    return function () {
+      const context = this;
+      const args = arguments;
       clearTimeout(timer);
-      // timer = setTimeout(() => func.apply(context, args), delay);
-      timer = setTimeout(() => func(e), delay);
+      timer = setTimeout(() => func.apply(context, args), delay);
+      // timer = setTimeout(() => func(e), delay);
     };
   }, []);
 

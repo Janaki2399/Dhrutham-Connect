@@ -4,6 +4,7 @@ import { useEffect } from "react";
 
 import { fetchFeed } from "./postsSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { API_STATUS } from "../../constants";
 
 export const Feed = () => {
   const dispatch = useDispatch();
@@ -12,16 +13,19 @@ export const Feed = () => {
   const feedStatus = useSelector((state) => state.posts.feedStatus);
 
   useEffect(() => {
-    if (feedStatus === "idle") {
+    if (feedStatus === API_STATUS.IDLE) {
       dispatch(fetchFeed(token));
     }
   }, [token, dispatch, feedStatus]);
 
+  if (feedStatus === API_STATUS.LOADING) {
+    return <div className="loader center-page-align" />;
+  }
+
   return (
     <div className="margin-top-5 ">
       <CreatePost />
-      {feedStatus === "loading" && <div className="loader center-page-align" />}
-      {feedStatus === "succeeded" && <PostsList posts={feed} />}
+      <PostsList posts={feed} />
     </div>
   );
 };

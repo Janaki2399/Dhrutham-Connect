@@ -2,12 +2,14 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addPost } from "./postsSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
+import { API_STATUS } from "../../constants";
 
 export const CreatePost = () => {
   const [text, setText] = useState("");
 
   const dispatch = useDispatch();
   const [uploadedAsset, setUploadedAsset] = useState(null);
+
   const token = useSelector((state) => state.auth.token);
   const currentUser = useSelector((state) => state.user.currentUser);
   const status = useSelector((state) => state.posts.addStatus);
@@ -34,8 +36,8 @@ export const CreatePost = () => {
   const uploadImage = () => {
     window.cloudinary.openUploadWidget(
       {
-        cloudName: "dmbkyiuvw",
-        uploadPreset: "dhrutham",
+        cloudName: process.env.CLOUD_NAME,
+        uploadPreset: process.env.UPLOAD_PRESET,
         cropping: true,
         multiple: false,
         maxVideoFileSize: 5000000,
@@ -48,7 +50,7 @@ export const CreatePost = () => {
     );
   };
   return (
-    <section className=" create-post flex-horizontal gray-border margin-top bg-white">
+    <section className="create-post flex-horizontal gray-border margin-top bg-white">
       <div className="img-margin">
         <img
           className="round-img img-size-small"
@@ -56,7 +58,7 @@ export const CreatePost = () => {
           alt="profile-pic"
         />
       </div>
-      <div className="full-width ">
+      <div className="full-width">
         <form onSubmit={createPost} className="flex-column">
           <textarea
             className="post-text-area"
@@ -65,7 +67,7 @@ export const CreatePost = () => {
             value={text}
           ></textarea>
 
-          <div className="margin-top ">
+          <div className="margin-top flex-horizontal space-between">
             <button
               type="button"
               className="icon-btn full-height text-gray cursor-pointer"
@@ -75,21 +77,23 @@ export const CreatePost = () => {
                 insert_photo
               </span>
             </button>
-            <button
-              className="btn btn-primary-contained post-btn"
-              disabled={text.length === 0 || status === "loading"}
-              type="submit"
-            >
-              POST
-            </button>
+            {status === API_STATUS.LOADING ? (
+              <div className="loader" />
+            ) : (
+              <button
+                className="btn btn-primary-contained post-btn"
+                disabled={text.length === 0 || status === API_STATUS.LOADING}
+                type="submit"
+              >
+                POST
+              </button>
+            )}
           </div>
         </form>
         {uploadedAsset && (
           <img src={uploadedAsset?.thumbnail_url} alt="uploaded" />
         )}
       </div>
-
-      {/* <div className="flex-horizontal">{status === "failed" && error}</div> */}
     </section>
   );
 };

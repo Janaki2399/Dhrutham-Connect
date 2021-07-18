@@ -5,7 +5,7 @@ export const EditProfileModal = ({ children, setModal }) => {
         <div className="flex-horizontal center-align space-between">
           <div>
             <button onClick={() => setModal(false)} className=" btn-box ">
-              <span className=" material-icons-outlined icon-color-gray ">
+              <span className=" material-icons-outlined icon-color-gray cursor-pointer">
                 close
               </span>
             </button>
