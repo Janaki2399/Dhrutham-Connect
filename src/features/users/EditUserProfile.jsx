@@ -6,9 +6,9 @@ import {
   CLOUDINARY_VIDEO_TRANSFORMATION_URL,
 } from "../../constants";
 
-export const EditUserProfile = () => {
+export const EditUserProfile = ({ setModal }) => {
   const token = useSelector((state) => state.auth.token);
-  const profile = useSelector((state) => state.user.userProfile);
+  const profile = useSelector((state) => state.user.currentUser);
   const updateStatus = useSelector((state) => state.user.profileUpdateStatus);
   const [firstName, setFirstName] = useState(profile.firstName);
   const [lastName, setLastName] = useState(profile.lastName);
@@ -48,9 +48,10 @@ export const EditUserProfile = () => {
   return (
     <div>
       <form
-        onSubmit={(e) => {
+        onSubmit={async (e) => {
           e.preventDefault();
-          saveDetails();
+          await saveDetails();
+          setModal((prevState) => !prevState);
         }}
         className="center-align-ver-hor padding-all full-width"
       >

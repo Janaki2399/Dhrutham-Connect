@@ -27,7 +27,7 @@ export const LikeButton = ({ post }) => {
   return (
     <div className="flex-horizontal margin-top">
       <button
-        className="icon-btn"
+        className="icon-btn cursor-pointer"
         onClick={() => {
           isLiked() ? unlikePostUser() : likePostByUser();
         }}

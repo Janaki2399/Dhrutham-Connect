@@ -71,7 +71,7 @@ export const UserProfile = () => {
         <div className="list-align-center ">
           {modal && (
             <EditProfileModal setModal={setModal}>
-              <EditUserProfile />
+              <EditUserProfile setModal={setModal} />
             </EditProfileModal>
           )}
           <div className="flex-horizontal margin-top-3 profile-mobile-view">
@@ -135,7 +135,7 @@ export const UserProfile = () => {
                 </div>
               </div>
               <div className="margin-top">{profile.bio}</div>
-              {profile.location?.length > 0 && (
+              {profile.websiteLink?.length > 0 && (
                 <div className="flex-horizontal margin-top">
                   <span className="material-icons-outlined icon-color-gray icon-size-24">
                     link

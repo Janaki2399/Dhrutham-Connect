@@ -173,6 +173,7 @@ export const userSlice = createSlice({
       state.profileUpdateStatus = "loading";
     },
     [updateUserProfile.fulfilled]: (state, action) => {
+      state.currentUser = action.payload;
       state.userProfile = action.payload;
       state.profileUpdateStatus = "succeeded";
     },
